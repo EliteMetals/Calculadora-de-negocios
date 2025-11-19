@@ -28,11 +28,10 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-tap-highlight-color: transparent;
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%);
             color: var(--dark);
             line-height: 1.6;
@@ -126,10 +125,9 @@
             padding: 12px;
             border: 1px solid #d1d5db;
             border-radius: 8px;
-            font-size: 16px; /* Mejor para móviles - previene zoom */
+            font-size: 16px; /* Mejor para móviles */
             background: white;
             transition: all 0.3s;
-            -webkit-appearance: none;
             appearance: none;
         }
         
@@ -159,9 +157,7 @@
             height: 18px;
             margin: 0;
             cursor: pointer;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
+                appearance: none;
             border: 2px solid #cbd5e0;
             border-radius: 4px;
             outline: none;
@@ -246,10 +242,7 @@
             color: var(--primary);
         }
         
-        .result-card {
-            background: #f8fafc;
-            border-left: 4px solid var(--primary);
-        }
+        /* .result-card styles consolidated later */
         
         .result-item {
             padding: 12px 0;
@@ -351,83 +344,12 @@
             padding-bottom: calc(15px + var(--safe-area-inset-bottom));
         }
         
-        .csv-upload {
-            background: #f0f6ff;
-            border: 2px dashed var(--primary);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            margin-top: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .csv-upload i {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-        
-        .csv-upload p {
-            margin-bottom: 10px;
-            color: var(--dark);
-            font-size: 0.9rem;
-        }
-        
-        .csv-upload input {
-            display: none;
-        }
-        
-        .csv-upload label {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s;
-            font-size: 0.9rem;
-            touch-action: manipulation;
-        }
+        /* CSV upload UI removed; related styles eliminated */
         
         .file-name {
             margin-top: 8px;
             font-size: 0.8rem;
             color: #4b5563;
-        }
-        
-        .db-status {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            background: #f0f6ff;
-            border-radius: 8px;
-            margin-top: 12px;
-            font-size: 0.9rem;
-        }
-        
-        .db-status i {
-            color: var(--primary);
-            font-size: 1.2rem;
-            margin-right: 10px;
-        }
-        
-        .db-status .info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .db-status .count {
-            background: var(--primary);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-top: 4px;
         }
         
         .results-grid {
@@ -504,12 +426,12 @@
         
         /* Mejoras para dispositivos táctiles */
         @media (hover: none) {
-            button:hover, .csv-upload label:hover {
+            button:hover {
                 transform: none;
                 box-shadow: none;
             }
-            
-            button:active, .csv-upload label:active {
+
+            button:active {
                 transform: translateY(2px);
             }
         }
@@ -541,7 +463,7 @@
             }
             
             select, input {
-                font-size: 16px; /* Previene zoom en iOS */
+                font-size: 16px; /* Previene zoom en móviles */
                 padding: 14px 12px;
             }
             
@@ -614,15 +536,7 @@
             
             /* Ajustar inputs numéricos para móviles */
             input[type="number"] {
-                -webkit-appearance: none;
                 appearance: none;
-                margin: 0;
-            }
-            
-            /* Para iOS */
-            input[type="number"]::-webkit-inner-spin-button,
-            input[type="number"]::-webkit-outer-spin-button {
-                -webkit-appearance: none;
                 margin: 0;
             }
         }
@@ -633,6 +547,12 @@
                 padding-left: max(10px, env(safe-area-inset-left));
                 padding-right: max(10px, env(safe-area-inset-right));
             }
+        }
+        /* Clase para reducir animaciones/transiciones cuando el navegador
+           indica ahorro de datos o para preferencias de accesibilidad */
+        .reduced-motion * {
+            transition: none !important;
+            animation: none !important;
         }
     </style>
 </head>
@@ -648,7 +568,7 @@
             <div class="input-section">
                 <div class="card">
                     <h2><i class="fas fa-cogs"></i> Parámetros de Negociación</h2>
-                    <div id="messageBox" class="message-box"></div>
+                    <div id="messageBox" class="message-box" role="status" aria-live="polite"></div>
                     
                     <div class="form-group">
                         <label for="material">Tipo de Material</label>
@@ -844,27 +764,6 @@
                 </div>
             </div>
             
-            <!-- Sección de base de datos al final -->
-            <div class="card">
-                <h2><i class="fas fa-database"></i> Base de Datos</h2>
-                <div class="csv-upload" id="csvUploadBox">
-                    <i class="fas fa-file-csv"></i>
-                    <p>Sube un archivo CSV para actualizar la base de datos</p>
-                    <label for="csvFileInput">
-                        <i class="fas fa-upload"></i> Seleccionar CSV
-                    </label>
-                    <input type="file" id="csvFileInput" accept=".csv">
-                    <div class="file-name" id="fileName">Ningún archivo seleccionado</div>
-                </div>
-                
-                <div class="db-status">
-                    <i class="fas fa-database"></i>
-                    <div class="info">
-                        <div>Registros en base de datos: <span id="dbRecordCount">0</span></div>
-                        <div class="info-text">Actualizado: <span id="dbUpdateTime">-</span></div>
-                    </div>
-                </div>
-            </div>
         </div>
         
         <div class="footer">
@@ -872,64 +771,73 @@
         </div>
     </div>
     
-<script id="csv-data" type="text/csv">
+    <script id="csv-data" type="text/plain">
 PROVEEDOR;MATERIAL;TAMAÑO CONTENEDOR;FLETE MARITIMO;SALIDA;BOLIPUERTO;INTER SHIP;COMISION;ORIGEN Y PUERTO;PAIS Y PUERTO DESTINO;ACARREO;KCI;ARANCEL;FLETE MIAMI
-COMERCIALIZADORA NS;ACERO;40HC;300;2050;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Kaohsiung, Taiwan;;;;
-MUNDO ACERO;ACERO;40HC;300;2050;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Kaohsiung, Taiwan;;;;
-COMERCIALIZADORA NS;ACERO;40HC;300;2050;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Kaohsiung, Taiwan;;;;
-THE COMPANY;ACR;40HC;300;3550;500;55;50;VENEZUELA, LA GUAIRA;Port Laem Chabang, Tailandia ;;;;
-MAB COMPRESSOR;ACR;40HC;-;-;-;-;-;ESTADOS UNIDOS, MIAMI;Loxley, Estados Unidos;-;-;-;950
-CASABLANCA;ALUMINIO DURO;40HC;930;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-CASABLANCA;ALUMINIO DURO;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Kaohsiung, Taiwan;;;;
-CASABLANCA;ALUMINIO DURO;40HC;930;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-COMERCIALIZADORA NS;ALUMINIO DURO;40HC;930;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-COMERCIALIZADORA NS;ALUMINIO DURO;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Kaohsiung, Taiwan;;;;
-COMERCIALIZADORA NS;ALUMINIO DURO;40HC;930;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-MULTIRECICLAJES;ALUMINIO DURO;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Kaohsiung, Taiwan;;;;
-MUNDO ACERO;ALUMINIO DURO;40HC;930;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-MUNDO ACERO;ALUMINIO DURO;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Kaohsiung, Taiwan;;;;
-MUNDO ACERO;ALUMINIO DURO;40HC;930;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-RECIPLAST Y VALERIO;ALUMINIO DURO;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Kaohsiung, Taiwan;;;;
-RECUPERADORA GUARICO;ALUMINIO DURO;40HC;930;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-RECUPERADORA GUARICO;ALUMINIO DURO;40HC;1685;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Ennore, India;;;;
-RECUPERADORA GUARICO;ALUMINIO DURO;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Kaohsiung, Taiwan;;;;
-CASABLANCA;ALUMINIO T/T;40HC;1160;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Estambul, Turquia;;;;
-COMERCIALIZADORA NS;ALUMINIO T/T;40HC;930;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-COMERCIALIZADORA NS;ALUMINIO T/T;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Kaohsiung, Taiwan;;;;
-COMERCIALIZADORA NS;ALUMINIO T/T;40HC;945;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Nhava Sheva, India;;;;
-RECUPERADORA GUARICO;ALUMINIO T/T;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Kaohsiung, Taiwan;;;;
-RECUPERADORA GUARICO;ALUMINIO T/T;40HC;930;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-RECUPERADORA GUARICO;ALUMINIO T/T;40HC;1160;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Estambul, Turquia;;;;
-CASABLANCA;COBRE;40HC;2432;11500;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Everglades, Estados Unidos;550;450;1600,00;1950,00
-FURIMETALES;COBRE;40HC;795;11500;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Gaoming, China;;;;
-FURIMETALES;COBRE;40HC;2432;11500;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Everglades, Estados Unidos;550;450;1600,00;1950,00
-MULTIRECICLAJES;COBRE;40HC;2432;11500;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Everglades, Estados Unidos;550;400;1600,00;1650,00
-MUNDO ACERO;COBRE;40HC;2432;11500;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Everglades, Estados Unidos;550;400;1600,00;1600,00
-VALKAM CAPITAL;EC WIRE;40HC;1000;-;-;950;-;COLOMBIA, BARRANQUILLA;Puerto de Everglades, Estados Unidos;550;400;3800,00;1700,00
-CASABLANCA;FOIL;40HC;1556;1900;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Bilbao, España;;;;
-ADRIAN;HIERRO;20ST;730;1000;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-ALLOY METAL;HIERRO;20ST;730;1000;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-CASABLANCA;HIERRO;20ST;730;1000;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-COMERCIALIZADORA NS;HIERRO;20ST;730;1000;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-EL PALMAR;HIERRO;20ST;730;1000;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-FUNDICION;HIERRO;20ST;730;1000;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-JAEM METAL;HIERRO;20ST;730;1000;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-RECIPLAST Y VALERIO;HIERRO;20ST;730;1000;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-RECUPERADORA GUARICO;HIERRO;20ST;730;1000;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-THE COMPANY;HIERRO;20ST;730;1000;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Mundra, India;;;;
-MUNDO ACERO;PAILAS DE ALUMINIO;20ST;1420;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Bilbao, España;;;;
-MUNDO METAL;PAILAS DE ALUMINIO;20ST;1420;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Bilbao, España;;;;
-CASABLANCA;PAILAS DE ALUMINIO;20ST;265;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Ningbo, China;;;;
-CASABLANCA;PAILAS DE ALUMINIO;20ST;300;1900;500;55;50;VENEZUELA, LA GUAIRA;Port Laem Chabang, Tailandia ;;;;
-MUNDO METAL;PERFIL ALUM;40HC;2432;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Everglades, Estados Unidos;550;400;1200,00;1700,00
-CASABLANCA;PERFIL ALUM;40HC;2432;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Everglades, Estados Unidos;550;400;1200,00;1700,00
-METCO IMPORT;RIELES;20ST;1815;1300;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Qasim, Pakistan;;;;
-CASABLANCA;RIN DE ALUMINIO;40HC;2432;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Everglades, Estados Unidos;550;400;1100,00;1100,00
-RECUPERADORA GUARICO;UBC;40HC;2432;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Everglades, Estados Unidos;550;400;1100,00;1100,00
-COMERCIALIZADORA NS;UBC;40HC;2432;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Everglades, Estados Unidos;550;450;1100,00;1100,00
-MUNDO METAL;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Port Laem Chabang, Tailandia ;;;;
-RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de Laem Chabang, Tailandia;;;;
-</script>    
+ADRIAN;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+ALLOY METAL;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+JH RECYCLING;ACERO;43HC;100;0;0;60;0;PUERTO RICO, PUERTO DE SAN JUAN;Kaohsiung, Taiwan;;;;
+CASABLANCA;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+MAB COMPRESSOR;ACR;40HC; -   ; -   ; -   ; -   ; -   ;ESTADOS UNIDOS, MIAMI;Loxley, Estados Unidos; -   ; -   ; -   ;950
+COMERCIALIZADORA NS;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+EL PALMAR;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+FUNDICION;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+JAEM METAL;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+RECIPLAST Y VALERIO;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+RECUPERADORA GUARICO;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+THE COMPANY;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+METCO IMPORT;RIELES;20ST;1.815;1.580;500;55;50;VENEZUELA, LA GUAIRA;Qasim, Pakistan;;;;
+CASABLANCA;ALUMINIO DURO;40HC;920;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ennore, India;;;;
+MUNDO METAL;ALUMINIO DURO;40HC;920;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ennore, India;;;;
+RECUPERADORA GUARICO;ALUMINIO DURO;40HC;920;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ennore, India;;;;
+CASABLANCA;ALUMINIO DURO;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
+COMERCIALIZADORA NS;ALUMINIO DURO;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
+MULTIRECICLAJES;ALUMINIO DURO;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
+MUNDO ACERO;ALUMINIO DURO;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
+RECIPLAST Y VALERIO;ALUMINIO DURO;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
+RECUPERADORA GUARICO;ALUMINIO DURO;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
+CASABLANCA;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+CASABLANCA;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+COMERCIALIZADORA NS;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+COMERCIALIZADORA NS;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+MUNDO ACERO;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+MUNDO ACERO;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+MAB COMPRESSOR;COBRE;20ST;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;East Hartford, Estados Unidos;0;0;0;644
+RECUPERADORA GUARICO;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+CASABLANCA;ALUMINIO T/T;40HC;1.177;1.750;500;55;50;VENEZUELA, LA GUAIRA;Estambul, Turquia;;;;
+RECUPERADORA GUARICO;ALUMINIO T/T;40HC;1.177;1.750;500;55;50;VENEZUELA, LA GUAIRA;Estambul, Turquia;;;;
+COMERCIALIZADORA NS;ALUMINIO T/T;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
+RECUPERADORA GUARICO;ALUMINIO T/T;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
+VALKAM CAPITAL;EC WIRE;40HC;1.000; -   ; -   ;950; -   ;COLOMBIA, BARRANQUILLA;Everglades, Estados Unidos;550;400;3.800,00;1.700,00
+PINAR DEL RIO;EXTRUSION 6063;20ST;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Pennsylvania, Estados Unidos;0;0;0;1700
+COMERCIALIZADORA NS;ALUMINIO T/T;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+RECUPERADORA GUARICO;ALUMINIO T/T;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+COMERCIALIZADORA NS;ALUMINIO T/T;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Nhava Sheva, India;;;;
+MUNDO ACERO;PAILAS DE ALUMINIO;20ST;1.459;1.750;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;;;;
+MUNDO METAL;PAILAS DE ALUMINIO;20ST;1.459;1.750;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;;;;
+MUNDO ACERO;PAILAS DE ALUMINIO;20ST;1.177;1.750;500;55;50;VENEZUELA, LA GUAIRA;Estambul, Turquia;;;;
+CASABLANCA;PAILAS DE ALUMINIO;20ST;240;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
+CASABLANCA;PAILAS DE ALUMINIO;20ST;60;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ningbo, China;;;;
+MUNDO METAL;PERFIL ALUM;40HC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.200,00;1.700,00
+CASABLANCA;PERFIL ALUM;40HC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.200,00;1.700,00
+CASABLANCA;RIN DE ALUMINIO;40HC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.100,00;1.100,00
+MAB COMPRESSOR;HVAC;40HC;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Frisco City, Estados Unidos;;;;
+RECUPERADORA GUARICO;UBC;40HC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.100,00;1.100,00
+COMERCIALIZADORA NS;UBC;40HC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;450;1.100,00;1.100,00
+RECUPERADORA GUARICO;UBC;40HC;170;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
+MUNDO METAL;UBC;40HC;170;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
+CASABLANCA;FOIL;40HC;1.836;1.900;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;;;;
+MUNDO ACERO;ACERO;40HC;80;2.050;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
+COMERCIALIZADORA NS;ACERO;40HC;80;2.050;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
+THE COMPANY;ACR;40HC;170;3.550;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
+CASABLANCA;COBRE;40HC;1.282;11.500;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;450;1.600,00;1.950,00
+MAB COMPRESSOR;SEAL UNITS;40HC;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Frisco City, Estados Unidos;550;;;
+PINAR DEL RIO;SEAL UNITS;40HC;0;0;;0;0;ESTADOS UNIDOS, MIAMI;Frisco City, Estados Unidos;550;;;
+AM SCRAP METAL;SEAL UNITS;20ST;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Frisco City, Estados Unidos;550;;;
+FURIMETALES;COBRE;40HC;1.282;11.500;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;450;1.600,00;1.950,00
+MULTIRECICLAJES;COBRE;40HC;1.282;11.500;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.600,00;1.650,00
+MUNDO ACERO;COBRE;40HC;1.282;11.500;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.600,00;1.600,00
+FURIMETALES;COBRE;40HC;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;;;;
+</script>
     <script>
         // Función para limpiar y normalizar valores
         function clean(val) {
@@ -956,15 +864,6 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
             return parseFloat(String(val).replace(/\./g, '').replace(/,/g, '.').replace(/\s/g, '')) || 0;
         }
         
-        // Función para formatear fecha
-        function formatDate(date) {
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            return `${day}/${month}/${year} ${hours}:${minutes}`;
-        }
         
         // Constante para conversión de libras a toneladas
         const LBS_TO_TM = 2204.62; // 1 tonelada métrica = 2204.62 libras
@@ -990,8 +889,7 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
         };
         
         const btnCalculate = document.getElementById('calculateBtn');
-        const csvFileInput = document.getElementById('csvFileInput');
-        const fileName = document.getElementById('fileName');
+        // CSV upload removed: file input and fileName elements no longer present (references removed)
         
         const summaryFields = {
             provider: document.getElementById('summaryProvider'),
@@ -1028,9 +926,13 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
         const numContainers = document.getElementById('numContainers');
         const totalQuantity = document.getElementById('totalQuantity');
         const quantityUnitLabel = document.getElementById('quantityUnitLabel');
-        const dbRecordCount = document.getElementById('dbRecordCount');
-        const dbUpdateTime = document.getElementById('dbUpdateTime');
+        // Elementos de estado de BD eliminados: no referenciados para evitar errores
         const pickupCostContainer = document.getElementById('pickupCostContainer');
+        
+        // Cachear selectores que se usan repetidamente para evitar consultas DOM repetidas
+        const purchaseLabel = document.querySelector('label[for="purchasePrice"]');
+        const saleLabel = document.querySelector('label[for="salePrice"]');
+        const usaOnlyFields = document.querySelectorAll('.usa-only');
         
         // Variables globales
         let data = [];
@@ -1058,6 +960,13 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
         function uniqueValues(col, arr) {
             return [...new Set(arr.map(x => clean(x[col])))].filter(Boolean).sort();
         }
+
+        // Actualizar labels de precios según la unidad seleccionada
+        function updatePriceLabels() {
+            const unit = selects.quantityUnit.value || 'TM';
+            if (purchaseLabel) purchaseLabel.textContent = 'Precio de Compra (USD / ' + unit + ')';
+            if (saleLabel) saleLabel.textContent = 'Precio de Venta (USD / ' + unit + ')';
+        }
         
         // Función para verificar si el destino es Estados Unidos
         function isUSADestination(destino) {
@@ -1073,18 +982,13 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
             return quantity; // Ya está en toneladas
         }
         
-        // Convertir toneladas a libras
-        function convertToLbs(tons) {
-            return tons * LBS_TO_TM;
-        }
+        // (Funciones auxiliares no utilizadas eliminadas para reducir tamaño)
         
         // Actualizar base de datos local
         function updateLocalDB(newData) {
             data = newData;
             
-            // Actualizar UI con información de la base de datos
-            dbRecordCount.textContent = data.length;
-            dbUpdateTime.textContent = formatDate(new Date());
+            // Información de estado de BD eliminada; no actualizamos contadores en UI
             
             // Resetear selects y campos
             Object.values(selects).forEach(s => {
@@ -1103,30 +1007,47 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
             showMessage('Base de datos cargada correctamente');
         }
         
-        // Cargar datos CSV al iniciar
+        // Cargar datos CSV embebido al iniciar (defensivo)
         window.addEventListener('DOMContentLoaded', function() {
-            var csvText = document.getElementById('csv-data').textContent.trim();
-            Papa.parse(csvText, {
-                header: true,
-                delimiter: ";",
-                skipEmptyLines: true,
-                complete: function(res) {
-                    let datosLimpios = res.data.map(row => {
-                        let obj = {};
-                        for (let k in row) {
-                            // Limpiar nombres de columnas y valores
-                            let cleanKey = clean(k);
-                            obj[cleanKey] = clean(row[k]);
-                        }
-                        
-                        // Convertir campos numéricos (eliminado GASTOS LOGISTICOS)
-                        ['FLETE MARITIMO', 'SALIDA', 'BOLIPUERTO', 'INTER SHIP', 'COMISION', 'ACARREO', 'KCI', 'ARANCEL', 'FLETE MIAMI'].forEach(
-                            fld => obj[fld] = toNumber(obj[fld]));
-                        return obj;
-                    });
-                    updateLocalDB(datosLimpios);
+            try {
+                const csvScript = document.getElementById('csv-data');
+                const csvText = csvScript && csvScript.textContent ? csvScript.textContent.trim() : '';
+                if (!csvText) {
+                    // No CSV embebido: inicializar labels y salir
+                    updatePriceLabels();
+                    return;
                 }
-            });
+
+                Papa.parse(csvText, {
+                    header: true,
+                    delimiter: ";",
+                    skipEmptyLines: true,
+                    complete: function(res) {
+                        let datosLimpios = res.data.map(row => {
+                            let obj = {};
+                            for (let k in row) {
+                                // Limpiar nombres de columnas y valores
+                                let cleanKey = clean(k);
+                                obj[cleanKey] = clean(row[k]);
+                            }
+
+                            // Convertir campos numéricos
+                            ['FLETE MARITIMO', 'SALIDA', 'BOLIPUERTO', 'INTER SHIP', 'COMISION', 'ACARREO', 'KCI', 'ARANCEL', 'FLETE MIAMI'].forEach(
+                                fld => obj[fld] = toNumber(obj[fld]));
+                            return obj;
+                        });
+                        updateLocalDB(datosLimpios);
+                        updatePriceLabels();
+                    },
+                    error: function(err) {
+                        showMessage('Error al parsear CSV embebido: ' + (err && err.message ? err.message : err), 'error');
+                        updatePriceLabels();
+                    }
+                });
+            } catch (err) {
+                showMessage('Error al procesar CSV embebido: ' + err.message, 'error');
+                updatePriceLabels();
+            }
         });
         
         // Event listeners para los select
@@ -1155,6 +1076,8 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
             quantityUnitLabel.textContent = this.value;
             // Actualizar el label de costo logístico por unidad
             labelLogisticCostPerUnit.textContent = 'Costo Logístico por ' + this.value + ':';
+            // Actualizar labels de precio para dejar claro la unidad
+            updatePriceLabels();
             clearResults();
         });
         
@@ -1196,6 +1119,20 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
             
             if (isNaN(quantity) || quantity <= 0) {
                 showMessage('La cantidad debe ser mayor a cero', 'error');
+                return;
+            }
+
+            // Validaciones adicionales
+            if (isNaN(purchasePrice) || purchasePrice < 0) {
+                showMessage('Precio de compra inválido', 'error');
+                return;
+            }
+            if (isNaN(salePrice) || salePrice < 0) {
+                showMessage('Precio de venta inválido', 'error');
+                return;
+            }
+            if (isNaN(profitMargin) || profitMargin < 0) {
+                showMessage('Margen de utilidad inválido', 'error');
                 return;
             }
             
@@ -1263,9 +1200,10 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
                 logisticCostPerUnit = totalLog / tons;
             }
             
-            // Calcular costos directos y utilidad
-            let directCost = quantity * (isNaN(purchasePrice) ? 0 : purchasePrice);
-            let totalInvoicing = isNaN(salePrice) ? 0 : quantity * salePrice;
+            // Calcular costos directos y utilidad (usar toneladas para precios que son por TM)
+            // `tons` ya es la cantidad convertida a toneladas si la unidad seleccionada fue LBS
+            let directCost = tons * (isNaN(purchasePrice) ? 0 : purchasePrice);
+            let totalInvoicing = isNaN(salePrice) ? 0 : tons * salePrice;
             let totalDirectCost = directCost + totalLog;
             let grossProfit = totalInvoicing - totalDirectCost;
             
@@ -1289,7 +1227,9 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
                 destino: match['PAIS Y PUERTO DESTINO'],
                 totalLog,
                 logisticCostPerUnit,
-                unit
+                unit,
+                quantity,
+                tons
             });
             
             updateDetailFields({
@@ -1324,21 +1264,21 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
             if (!lastMatch) return;
             
             const { quantity, unit, purchasePrice, salePrice, profitMargin } = lastMatch;
-            
-            // Calcular costo por unidad según la unidad seleccionada
+
+            // Calcular cantidad en toneladas y costo por unidad según la unidad seleccionada
+            const tons = convertToTons(quantity, unit);
             let logisticCostPerUnit;
             if (unit === 'LBS') {
                 // Convertir el costo total a costo por libra
                 logisticCostPerUnit = manualCost / quantity;
             } else {
                 // TM - costo por tonelada
-                const tons = convertToTons(quantity, unit);
                 logisticCostPerUnit = manualCost / tons;
             }
-            
-            // Calcular costos directos y utilidad
-            let directCost = quantity * (isNaN(purchasePrice) ? 0 : purchasePrice);
-            let totalInvoicing = isNaN(salePrice) ? 0 : quantity * salePrice;
+
+            // Calcular costos directos y utilidad (usar toneladas para precios por TM)
+            let directCost = tons * (isNaN(purchasePrice) ? 0 : purchasePrice);
+            let totalInvoicing = isNaN(salePrice) ? 0 : tons * salePrice;
             let totalDirectCost = directCost + manualCost;
             let grossProfit = totalInvoicing - totalDirectCost;
             
@@ -1362,7 +1302,9 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
                 destino: lastMatch['PAIS Y PUERTO DESTINO'],
                 totalLog: manualCost,
                 logisticCostPerUnit,
-                unit: lastMatch.unit
+                unit: lastMatch.unit,
+                quantity: lastMatch.quantity,
+                tons: lastMatch.tons
             });
             
             updateResultFields({ 
@@ -1411,7 +1353,6 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
             detailFields.comision.textContent = formatNumber(obj.comision) + ' USD';
             
             // Mostrar u ocultar campos específicos para Estados Unidos
-            const usaOnlyFields = document.querySelectorAll('.usa-only');
             usaOnlyFields.forEach(field => {
                 field.style.display = obj.isUSA ? 'flex' : 'none';
             });
@@ -1477,7 +1418,6 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
             calculatedLogisticCost = 0;
             
             // Ocultar campos específicos para Estados Unidos al limpiar
-            const usaOnlyFields = document.querySelectorAll('.usa-only');
             usaOnlyFields.forEach(field => {
                 field.style.display = 'none';
             });
@@ -1486,57 +1426,15 @@ RECUPERADORA GUARICO;UBC;40HC;300;1750;500;55;50;VENEZUELA, LA GUAIRA;Puerto de 
             pickupCostContainer.style.display = 'none';
         }
         
-        // Cargar archivo CSV para actualizar base de datos
-        csvFileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            fileName.textContent = file.name;
-            
-            Papa.parse(file, {
-                header: true,
-                delimiter: ";",
-                skipEmptyLines: true,
-                complete: function(res) {
-                    if (res.errors.length > 0) {
-                        showMessage('Error al procesar el archivo: ' + res.errors[0].message, 'error');
-                        return;
-                    }
-                    
-                    let datosLimpios = res.data.map(row => {
-                        let obj = {};
-                        for (let k in row) {
-                            // Limpiar nombres de columnas y valores
-                            let cleanKey = clean(k);
-                            obj[cleanKey] = clean(row[k]);
-                        }
-                        
-                        // Convertir campos numéricos (eliminado GASTOS LOGISTICOS)
-                        ['FLETE MARITIMO', 'SALIDA', 'BOLIPUERTO', 'INTER SHIP', 'COMISION', 'ACARREO', 'KCI', 'ARANCEL', 'FLETE MIAMI'].forEach(
-                            fld => obj[fld] = toNumber(obj[fld]));
-                        return obj;
-                    });
-                    
-                    updateLocalDB(datosLimpios);
-                },
-                error: function(error) {
-                    showMessage('Error al leer el archivo: ' + error, 'error');
-                }
-            });
-        });
+        // CSV upload removed: event listener eliminated
         
-        // Prevenir zoom en iOS al enfocar inputs
-        document.addEventListener('touchstart', function() {
-            // Esta función vacía ayuda a mejorar la respuesta táctil
-        }, { passive: true });
+        // Touchstart handler removed (iOS-specific behavior eliminated)
         
         // Mejorar el rendimiento en dispositivos móviles
         if ('connection' in navigator && navigator.connection.saveData === true) {
-            // Modo ahorro de datos: deshabilitar algunas animaciones
+            // Modo ahorro de datos: deshabilitar algunas animaciones via clase
             document.documentElement.style.setProperty('--primary', '#1e3a8a');
-            document.querySelectorAll('*').forEach(el => {
-                el.style.transition = 'none';
-            });
+            document.documentElement.classList.add('reduced-motion');
         }
     </script>
 </body>
