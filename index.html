@@ -2,1440 +2,607 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#1e3a8a">
-    <title>Calculadora de Negociación - Responsiva</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#111827">
+    <title>Calculadora Elite Metals</title>
     <style>
-        /* Estilos existentes (sin cambios) */
         :root {
-            --primary: #1e3a8a;
-            --primary-light: #2563eb;
-            --primary-dark: #1d4ed8;
-            --success: #10B981;
-            --success-dark: #059669;
-            --danger: #EF4444;
-            --warning: #F59E0B;
-            --gray-light: #f3f4f6;
-            --gray: #e5e7eb;
-            --dark: #1f2937;
-            --safe-area-inset-top: env(safe-area-inset-top);
-            --safe-area-inset-bottom: env(safe-area-inset-bottom);
+            /* COLORES BASADOS EN EL LOGO ELITE METALS */
+            --brand-red: #d32f2f;       /* Rojo del logo */
+            --brand-red-dark: #b71c1c;  /* Rojo más oscuro para hover */
+            --brand-black: #111827;     /* Negro metálico */
+            --bg-color: #f3f4f6;        /* Gris muy claro para el fondo */
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --success: #059669;
+            --radius: 12px;
         }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
-            font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%);
-            color: var(--dark);
-            line-height: 1.6;
-            padding: 10px;
-            min-height: 100vh;
-            padding-top: var(--safe-area-inset-top);
-            padding-bottom: var(--safe-area-inset-bottom);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            padding-bottom: env(safe-area-inset-bottom);
         }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.97);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-        
+
+        /* --- NUEVO ENCABEZADO ESTILO "ELITE" --- */
         header {
-            background: linear-gradient(to right, #1e3a8a, #2563eb);
+            background-color: var(--brand-black);
             color: white;
-            padding: 20px 15px;
-            text-align: center;
-            border-bottom: 4px solid var(--primary-dark);
-            padding-top: calc(15px + var(--safe-area-inset-top));
-        }
-        
-        header h1 {
-            font-size: 1.4rem;
-            margin-bottom: 8px;
+            padding: calc(0.8rem + env(safe-area-inset-top)) 1rem 0.8rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-bottom: 3px solid var(--brand-red);
         }
-        
-        header p {
-            opacity: 0.9;
-            max-width: 700px;
+
+        .brand-container {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+        }
+
+        .brand-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .text-elite { color: var(--brand-red); }
+        .text-metals { color: #ffffff; }
+
+        .brand-subtitle {
+            font-size: 0.55rem;
+            color: #9ca3af;
+            letter-spacing: 2px;
+            margin-top: 2px;
+            text-transform: uppercase;
+        }
+
+        .app-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .container {
+            max-width: 600px;
             margin: 0 auto;
-            font-size: 0.9rem;
+            padding: 1rem;
         }
-        
-        .content {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            padding: 15px;
-        }
-        
-        .input-section, .result-section {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
+
         .card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            padding: 15px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        /* Títulos de secciones */
+        h2 { 
+            font-size: 1rem; 
+            margin: 0 0 1rem 0; 
+            color: var(--brand-black); 
+            border-left: 4px solid var(--brand-red); /* Detalle rojo a la izquierda */
+            padding-left: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
         }
         
-        h2 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--gray);
-        }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.4rem; font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
         
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: #4b5563;
-            font-size: 0.9rem;
-        }
-        
-        select, input {
+        select, input:not([type="checkbox"]) {
             width: 100%;
-            padding: 12px;
+            padding: 14px; /* Un poco más alto para dedos */
             border: 1px solid #d1d5db;
             border-radius: 8px;
-            font-size: 16px; /* Mejor para móviles */
-            background: white;
-            transition: all 0.3s;
+            font-size: 16px; 
+            background-color: #fff;
             appearance: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        
-        select {
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 16px;
-            padding-right: 40px;
-        }
-        
+
         select:focus, input:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            border-color: var(--brand-red);
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
         }
-        
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.2em;
         }
-        
-        .checkbox-group input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            margin: 0;
-            cursor: pointer;
-                appearance: none;
-            border: 2px solid #cbd5e0;
-            border-radius: 4px;
-            outline: none;
-            transition: all 0.2s;
-            position: relative;
-        }
-        
-        .checkbox-group input[type="checkbox"]:checked {
-            background-color: var(--primary);
-            border-color: var(--primary);
-        }
-        
-        .checkbox-group input[type="checkbox"]:checked::after {
-            content: "✓";
-            position: absolute;
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        
-        .checkbox-group label {
-            margin-bottom: 0;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        
-        button {
-            background: var(--primary);
+
+        .input-group { display: flex; gap: 8px; }
+        .input-group input { flex: 1; }
+        .input-group select { width: 90px; background-color: #f9fafb; }
+
+        /* BOTÓN ESTILO BRAND */
+        .btn-main {
+            width: 100%;
+            background: linear-gradient(135deg, var(--brand-red) 0%, var(--brand-red-dark) 100%);
             color: white;
             border: none;
+            padding: 16px;
             border-radius: 8px;
-            padding: 16px 15px;
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            touch-action: manipulation;
+            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3);
+            transition: transform 0.1s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        
-        button:hover, button:active {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-        }
-        
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--gray);
-            font-size: 0.9rem;
-        }
-        
-        .summary-item:last-child {
-            border-bottom: none;
-        }
-        
-        .summary-item .label {
-            font-weight: 500;
-            color: #4b5563;
-        }
-        
-        .summary-item .value {
-            font-weight: 600;
-            text-align: right;
-        }
-        
-        .highlight {
-            background: #f0f6ff;
-            border-radius: 8px;
-            padding: 10px 12px;
-            margin-top: 5px;
-            font-weight: 600;
-            color: var(--primary);
-        }
-        
-        /* .result-card styles consolidated later */
-        
-        .result-item {
-            padding: 12px 0;
-            border-bottom: 1px solid var(--gray);
-        }
-        
-        .result-item:last-child {
-            border-bottom: none;
-        }
-        
-        .result-value {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-top: 5px;
-        }
-        
-        .ideal-price {
-            color: var(--success);
-            font-weight: 700;
-        }
-        
-        .container-info {
-            background: #fff7ed;
-            border: 1px solid #ffedd5;
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-        
-        .container-info i {
-            color: var(--warning);
-            font-size: 20px;
-        }
-        
-        .message-box {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-        
-        .message-success {
-            background: #e6f4ea;
-            color: var(--success);
-            border: 1px solid #c8e6c9;
-        }
-        
-        .message-error {
-            background: #ffebee;
-            color: var(--danger);
-            border: 1px solid #ffcdd2;
-        }
-        
-        .manual-override-box {
-            background: #f0f6ff;
-            border: 1px solid var(--primary);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-        }
-        
-        .manual-override-label {
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-        
-        .update-btn {
-            background: var(--success);
-            margin-top: 12px;
-        }
-        
-        .update-btn:hover, .update-btn:active {
-            background: var(--success-dark);
-            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
-        }
-        
-        .info-text {
-            font-size: 0.8rem;
-            color: #6b7280;
-            margin-top: 4px;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 20px 15px;
-            color: white;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 0 0 12px 12px;
-            font-size: 0.8rem;
-            padding-bottom: calc(15px + var(--safe-area-inset-bottom));
-        }
-        
-        /* CSV upload UI removed; related styles eliminated */
-        
-        .file-name {
-            margin-top: 8px;
-            font-size: 0.8rem;
-            color: #4b5563;
-        }
-        
+        .btn-main:active { transform: scale(0.98); }
+
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-bottom: 15px;
         }
         
-        .result-card {
+        .result-box {
+            background: #f8fafc;
             padding: 12px;
             border-radius: 8px;
-            background: #f8fafc;
-            border-left: 4px solid var(--primary);
+            text-align: center;
+            border: 1px solid var(--border);
         }
+        .result-box span { display: block; font-size: 0.75rem; color: var(--text-light); margin-bottom: 4px; text-transform: uppercase; }
+        .result-box strong { display: block; font-size: 1.2rem; color: var(--brand-black); }
         
-        .result-card h3 {
-            margin-top: 0;
-            color: var(--primary);
-            font-size: 1rem;
-            margin-bottom: 8px;
-        }
-        
-        .profit-positive {
-            color: var(--success);
-        }
-        
-        .profit-negative {
-            color: var(--danger);
-        }
-        
-        .cost-details {
-            margin-top: 15px;
-            border-top: 1px solid var(--gray);
-            padding-top: 15px;
-        }
-        
-        .cost-detail-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-        
-        .cost-detail-item .label {
-            font-weight: 500;
-            color: #4b5563;
-        }
-        
-        .cost-detail-item .value {
+        .text-success { color: var(--success) !important; }
+        .text-danger { color: var(--brand-red) !important; }
+
+        .details-toggle {
+            background: none;
+            border: none;
+            color: var(--brand-red);
+            font-size: 0.85rem;
+            width: 100%;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
             font-weight: 600;
         }
         
-        .input-with-unit {
-            display: flex;
-            gap: 10px;
+        .row-item { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 10px; border-bottom: 1px dashed #e5e7eb; padding-bottom: 5px; }
+        .row-item:last-child { border-bottom: none; }
+        
+        .row-item.highlight { 
+            background: #fff1f2; /* Fondo rojizo muy suave */
+            padding: 10px; 
+            border-radius: 6px; 
+            border: 1px solid #fecdd3; 
+            font-weight: 700; 
+            color: var(--brand-red-dark); 
         }
         
-        .input-with-unit input {
-            flex: 1;
+        .hidden { display: none !important; }
+        
+        /* Checkbox estilo Elite */
+        .checkbox-wrapper { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            padding: 15px 0; 
+            cursor: pointer; 
+            border-top: 1px solid #eee;
+            margin-top: 10px;
         }
         
-        .input-with-unit select {
-            width: 80px;
+        input[type="checkbox"] {
+            appearance: auto;
+            width: 22px;
+            height: 22px;
+            margin: 0;
+            cursor: pointer;
+            accent-color: var(--brand-red); /* Checkbox rojo */
         }
         
-        .hidden {
-            display: none !important;
-        }
-        
-        .usa-only {
-            display: none;
-        }
-        
-        /* Mejoras para dispositivos táctiles */
-        @media (hover: none) {
-            button:hover {
-                transform: none;
-                box-shadow: none;
-            }
-
-            button:active {
-                transform: translateY(2px);
-            }
-        }
-        
-        /* Media Queries para móviles */
-        @media (max-width: 768px) {
-            .content {
-                padding: 10px;
-            }
-            
-            header {
-                padding: 15px 10px;
-            }
-            
-            header h1 {
-                font-size: 1.2rem;
-            }
-            
-            header p {
-                font-size: 0.8rem;
-            }
-            
-            .card {
-                padding: 12px;
-            }
-            
-            h2 {
-                font-size: 1.1rem;
-            }
-            
-            select, input {
-                font-size: 16px; /* Previene zoom en móviles */
-                padding: 14px 12px;
-            }
-            
-            .result-value {
-                font-size: 1.1rem;
-            }
-            
-            .results-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            button {
-                padding: 18px 15px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            body {
-                padding: 5px;
-            }
-            
-            header h1 {
-                font-size: 1.1rem;
-                flex-direction: column;
-                gap: 5px;
-            }
-            
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .result-card h3 {
-                font-size: 0.95rem;
-            }
-            
-            .result-value {
-                font-size: 1rem;
-            }
-            
-            .summary-item {
-                flex-direction: column;
-                gap: 3px;
-            }
-            
-            .summary-item .label, 
-            .summary-item .value {
-                width: 100%;
-                text-align: left;
-            }
-            
-            .container-info {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-            
-            .cost-detail-item {
-                flex-direction: column;
-                gap: 3px;
-            }
-            
-            .input-with-unit {
-                flex-direction: column;
-                gap: 5px;
-            }
-            
-            .input-with-unit select {
-                width: 100%;
-            }
-            
-            /* Ajustar inputs numéricos para móviles */
-            input[type="number"] {
-                appearance: none;
-                margin: 0;
-            }
-        }
-        
-        /* Soporte para dispositivos con notch */
-        @supports(padding: max(0px)) {
-            body, header, .footer {
-                padding-left: max(10px, env(safe-area-inset-left));
-                padding-right: max(10px, env(safe-area-inset-right));
-            }
-        }
-        /* Clase para reducir animaciones/transiciones cuando el navegador
-           indica ahorro de datos o para preferencias de accesibilidad */
-        .reduced-motion * {
-            transition: none !important;
-            animation: none !important;
+        /* Input manual destacado */
+        #manualCost {
+            background-color: #fff;
+            border: 1px dashed var(--brand-red);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-calculator"></i> Calculadora de Negociación</h1>
-            <p>Herramienta para Elite Metals Group Corp</p>
-        </header>
-        
-        <div class="content">
-            <!-- Sección de parámetros de negociación -->
-            <div class="input-section">
-                <div class="card">
-                    <h2><i class="fas fa-cogs"></i> Parámetros de Negociación</h2>
-                    <div id="messageBox" class="message-box" role="status" aria-live="polite"></div>
-                    
-                    <div class="form-group">
-                        <label for="material">Tipo de Material</label>
-                        <select id="material"></select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="proveedor">Proveedor</label>
-                        <select id="proveedor"></select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="destino">País de Destino</label>
-                        <select id="destino"></select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="quantity">Cantidad</label>
-                        <div class="input-with-unit">
-                            <input type="number" id="quantity" min="0" step="0.1" value="0" inputmode="decimal">
-                            <select id="quantityUnit">
-                                <option value="TM">TM</option>
-                                <option value="LBS">LBS</option>
-                            </select>
-                        </div>
-                        <div class="info-text">Cada contenedor tiene capacidad para 27.5 toneladas</div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="purchasePrice">Precio de Compra (USD)</label>
-                        <input type="number" id="purchasePrice" min="0" step="0.01" value="0" inputmode="decimal">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="salePrice">Precio de Venta (USD)</label>
-                        <input type="number" id="salePrice" min="0" step="0.01" value="0" inputmode="decimal">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="profitMargin">Margen de Utilidad Deseado (%)</label>
-                        <input type="number" id="profitMargin" min="0" step="0.1" value="0" inputmode="decimal">
-                    </div>
-                    
-                    <button id="calculateBtn">
-                        <i class="fas fa-calculator"></i> Calcular Negociación
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Sección de resultados -->
-            <div class="result-section">
-                <div class="card">
-                    <h2><i class="fas fa-file-invoice-dollar"></i> Resumen de Costos Logísticos</h2>
-                    
-                    <div class="summary-item">
-                        <div class="label">Proveedor:</div>
-                        <div class="value" id="summaryProvider">N/A</div>
-                    </div>
-                    
-                    <div class="summary-item">
-                        <div class="label">Destino:</div>
-                        <div class="value" id="summaryDestination">N/A</div>
-                    </div>
-                    
-                    <div id="costDetails" class="cost-details">
-                        <h3>Desglose de Costos por Contenedor</h3>
-                        
-                        <div class="cost-detail-item">
-                            <div class="label">Flete Marítimo:</div>
-                            <div class="value" id="detailFleteMaritimo">0 USD</div>
-                        </div>
-                        
-                        <div class="cost-detail-item">
-                            <div class="label">Salida:</div>
-                            <div class="value" id="detailSalida">0 USD</div>
-                        </div>
-                        
-                        <div class="cost-detail-item">
-                            <div class="label">Bolipuerto:</div>
-                            <div class="value" id="detailBolipuerto">0 USD</div>
-                        </div>
-                        
-                        <div class="cost-detail-item">
-                            <div class="label">Inter Ship:</div>
-                            <div class="value" id="detailInterShip">0 USD</div>
-                        </div>
-                        
-                        <div class="cost-detail-item">
-                            <div class="label">Comisión:</div>
-                            <div class="value" id="detailComision">0 USD</div>
-                        </div>
-                        
-                        <div class="cost-detail-item" id="pickupCostContainer">
-                            <div class="label">Recogida por Proveedor:</div>
-                            <div class="value" id="detailPickupCost">0 USD</div>
-                        </div>
-                        
-                        <div class="cost-detail-item usa-only">
-                            <div class="label">Acarreo:</div>
-                            <div class="value" id="detailAcarreo">0 USD</div>
-                        </div>
-                        
-                        <div class="cost-detail-item usa-only">
-                            <div class="label">KCI:</div>
-                            <div class="value" id="detailKci">0 USD</div>
-                        </div>
-                        
-                        <div class="cost-detail-item usa-only">
-                            <div class="label">Arancel:</div>
-                            <div class="value" id="detailArancel">0 USD</div>
-                        </div>
-                        
-                        <div class="cost-detail-item usa-only">
-                            <div class="label">Flete Miami:</div>
-                            <div class="value" id="detailFleteMiami">0 USD</div>
-                        </div>
-                        
-                        <div class="cost-detail-item highlight">
-                            <div class="label">Total Costos por Contenedor:</div>
-                            <div class="value" id="detailTotalCostPerContainer">0 USD</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Opción de recogida por proveedor -->
-                    <div class="checkbox-group" style="margin-top: 15px;">
-                        <input type="checkbox" id="pickupByProvider">
-                        <label for="pickupByProvider">Recogido por el proveedor (+500 USD por contenedor)</label>
-                    </div>
-                    
-                    <div id="containerInfo" class="container-info">
-                        <i class="fas fa-box"></i>
-                        <div>
-                            <div>Se necesitan <strong id="numContainers">0</strong> contenedores para <strong id="totalQuantity">0</strong> <span id="quantityUnitLabel">TM</span></div>
-                            <div class="info-text">Cada contenedor tiene capacidad para 27.5 toneladas</div>
-                        </div>
-                    </div>
-                    
-                    <div class="summary-item">
-                        <div class="label">Total Costo Logístico Calculado:</div>
-                        <div class="value highlight" id="summaryTotalLogisticCost">N/A</div>
-                    </div>
-                    
-                    <!-- Campo para modificar manualmente el costo logístico -->
-                    <div class="form-group" style="margin-top: 15px;">
-                        <label for="manualLogisticCost">Modificar Costo Logístico Total (USD)</label>
-                        <input type="number" id="manualLogisticCost" min="0" step="0.01" value="0" inputmode="decimal">
-                        <div class="info-text">Utilice este campo para ajustar manualmente el costo logístico si es necesario</div>
-                    </div>
-                    
-                    <div class="summary-item">
-                        <div class="label" id="labelLogisticCostPerUnit">Costo Logístico por Tonelada:</div>
-                        <div class="value highlight" id="summaryLogisticCostPerTon">N/A</div>
-                    </div>
-                </div>
-                
-                <!-- Resultados de la negociación -->
-                <div class="card result-card">
-                    <h2><i class="fas fa-chart-line"></i> Resultados de la Negociación</h2>
-                    
-                    <div class="results-grid">
-                        <div class="result-card">
-                            <h3>Costo Directo (Compra)</h3>
-                            <div class="result-value" id="directCost">0 USD</div>
-                        </div>
-                        
-                        <div class="result-card">
-                            <h3>Total Facturado (Venta)</h3>
-                            <div class="result-value" id="totalInvoicing">0 USD</div>
-                        </div>
-                        
-                        <div class="result-card">
-                            <h3>Utilidad Bruta</h3>
-                            <div class="result-value" id="grossProfit">0 USD</div>
-                        </div>
-                        
-                        <div class="result-card">
-                            <h3>ROI</h3>
-                            <div class="result-value" id="roi">0%</div>
-                        </div>
-                    </div>
-                    
-                    <div class="result-item">
-                        <div class="label">Precio de Venta Ideal:</div>
-                        <div class="result-value ideal-price" id="idealSalePrice">0 USD</div>
-                        <div class="info-text">Según margen deseado</div>
-                    </div>
-                    
-                    <div class="result-item">
-                        <div class="label">Precio de Compra Ideal:</div>
-                        <div class="result-value ideal-price" id="idealPurchasePrice">0 USD</div>
-                        <div class="info-text">Según margen deseado y precio de venta</div>
-                    </div>
-                </div>
-            </div>
-            
+
+<header>
+    <div class="brand-container">
+        <div class="brand-title">
+            <span class="text-elite">ELITE</span> <span class="text-metals">METALS</span>
         </div>
+        <div class="brand-subtitle">GROUP CORP &bull; FINANZAS</div>
+    </div>
+    <div class="app-badge">
+        Calculadora
+    </div>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2><i style="color:var(--brand-red)">&#9881;</i> Parámetros</h2>
         
-        <div class="footer">
-            <p>Calculadora de Negociación &copy; 2025 - Derechos reservados para Elite Metals</p>
+        <div class="form-group">
+            <label>Material</label>
+            <select id="material"></select>
+        </div>
+
+        <div class="form-group">
+            <label>Destino</label>
+            <select id="destino" disabled><option>Seleccione material primero</option></select>
+        </div>
+
+        <div class="form-group">
+            <label>Cantidad</label>
+            <div class="input-group">
+                <input type="number" id="quantity" placeholder="0" inputmode="decimal">
+                <select id="unit">
+                    <option value="TM">TM</option>
+                    <option value="LBS">LBS</option>
+                </select>
+            </div>
+            <small style="color:var(--text-light); font-size:0.75rem; display:block; margin-top:4px;">Capacidad contenedor: 27.5 TM</small>
+        </div>
+
+        <div class="results-grid">
+            <div class="form-group">
+                <label id="lblBuy">Compra (USD)</label>
+                <input type="number" id="purchasePrice" placeholder="0.00" inputmode="decimal">
+            </div>
+            <div class="form-group">
+                <label id="lblSell">Venta (USD)</label>
+                <input type="number" id="salePrice" placeholder="0.00" inputmode="decimal">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Margen Utilidad Deseado (%)</label>
+            <input type="number" id="profitMargin" placeholder="Opcional" inputmode="decimal">
+        </div>
+
+        <button class="btn-main" id="btnCalculate">CALCULAR</button>
+    </div>
+
+    <div id="resultsArea" class="hidden">
+        
+        <div class="card">
+            <h2>Resultados Financieros</h2>
+            <div class="results-grid" style="margin-bottom: 1rem;">
+                <div class="result-box">
+                    <span>Utilidad Bruta</span>
+                    <strong id="resGrossProfit">0</strong>
+                </div>
+                <div class="result-box">
+                    <span>ROI</span>
+                    <strong id="resRoi">0%</strong>
+                </div>
+            </div>
+            
+            <div id="suggestionsContainer" class="hidden">
+                <div class="row-item">
+                    <span>Precio Venta Sugerido:</span>
+                    <strong style="color:var(--success)" id="resIdealSell">0</strong>
+                </div>
+                <div class="row-item">
+                    <span>Precio Compra Sugerido:</span>
+                    <strong style="color:var(--success)" id="resIdealBuy">0</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Logística & Costos</h2>
+            
+            <div class="row-item highlight">
+                <span>Total Logística:</span>
+                <span id="resTotalLogistic">0 USD</span>
+            </div>
+            <div class="row-item">
+                <span id="lblLogisticUnit">Costo por TM:</span>
+                <strong id="resLogisticUnit">0 USD</strong>
+            </div>
+            <div class="row-item">
+                <span>Contenedores:</span>
+                <span id="resContainers">0</span>
+            </div>
+
+            <button type="button" class="details-toggle" onclick="document.getElementById('detailsList').classList.toggle('hidden')">
+                Ver/Ocultar Desglose &#9662;
+            </button>
+
+            <div id="detailsList" class="hidden" style="margin-top:10px; border-top:1px solid #eee; padding-top:10px;">
+                </div>
+
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="pickupOverride">
+                <label for="pickupOverride">Recogida Proveedor (+$500/cont)</label>
+            </div>
+            
+            <div class="form-group" style="margin-top:10px;">
+                <label style="font-size:0.8rem; color:var(--brand-red)">Ajuste Manual Costo Total:</label>
+                <input type="number" id="manualCost" placeholder="Escriba para sobreescribir cálculo" inputmode="decimal">
+                <small id="manualWarning" class="hidden" style="color:var(--brand-red); font-size:0.75rem; font-weight:bold;">*Sobreescribe desglose y recogida</small>
+            </div>
         </div>
     </div>
-    
-    <script id="csv-data" type="text/plain">
-PROVEEDOR;MATERIAL;TAMAÑO CONTENEDOR;FLETE MARITIMO;SALIDA;BOLIPUERTO;INTER SHIP;COMISION;ORIGEN Y PUERTO;PAIS Y PUERTO DESTINO;ACARREO;KCI;ARANCEL;FLETE MIAMI
-ADRIAN;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-ALLOY METAL;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-JH RECYCLING;ACERO;43HC;100;0;0;60;0;PUERTO RICO, PUERTO DE SAN JUAN;Kaohsiung, Taiwan;;;;
-CASABLANCA;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-MAB COMPRESSOR;ACR;40HC; -   ; -   ; -   ; -   ; -   ;ESTADOS UNIDOS, MIAMI;Loxley, Estados Unidos; -   ; -   ; -   ;950
-COMERCIALIZADORA NS;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-EL PALMAR;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-FUNDICION;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-JAEM METAL;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-RECIPLAST Y VALERIO;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-RECUPERADORA GUARICO;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-THE COMPANY;HIERRO;20ST;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-METCO IMPORT;RIELES;20ST;1.815;1.580;500;55;50;VENEZUELA, LA GUAIRA;Qasim, Pakistan;;;;
-CASABLANCA;ALUMINIO DURO;40HC;920;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ennore, India;;;;
-MUNDO METAL;ALUMINIO DURO;40HC;920;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ennore, India;;;;
-RECUPERADORA GUARICO;ALUMINIO DURO;40HC;920;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ennore, India;;;;
-CASABLANCA;ALUMINIO DURO;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
-COMERCIALIZADORA NS;ALUMINIO DURO;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
-MULTIRECICLAJES;ALUMINIO DURO;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
-MUNDO ACERO;ALUMINIO DURO;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
-RECIPLAST Y VALERIO;ALUMINIO DURO;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
-RECUPERADORA GUARICO;ALUMINIO DURO;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
-CASABLANCA;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-CASABLANCA;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-COMERCIALIZADORA NS;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-COMERCIALIZADORA NS;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-MUNDO ACERO;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-MUNDO ACERO;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-MAB COMPRESSOR;COBRE;20ST;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;East Hartford, Estados Unidos;0;0;0;644
-RECUPERADORA GUARICO;ALUMINIO DURO;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-CASABLANCA;ALUMINIO T/T;40HC;1.177;1.750;500;55;50;VENEZUELA, LA GUAIRA;Estambul, Turquia;;;;
-RECUPERADORA GUARICO;ALUMINIO T/T;40HC;1.177;1.750;500;55;50;VENEZUELA, LA GUAIRA;Estambul, Turquia;;;;
-COMERCIALIZADORA NS;ALUMINIO T/T;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
-RECUPERADORA GUARICO;ALUMINIO T/T;40HC;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
-VALKAM CAPITAL;EC WIRE;40HC;1.000; -   ; -   ;950; -   ;COLOMBIA, BARRANQUILLA;Everglades, Estados Unidos;550;400;3.800,00;1.700,00
-PINAR DEL RIO;EXTRUSION 6063;20ST;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Pennsylvania, Estados Unidos;0;0;0;1700
-COMERCIALIZADORA NS;ALUMINIO T/T;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-RECUPERADORA GUARICO;ALUMINIO T/T;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-COMERCIALIZADORA NS;ALUMINIO T/T;40HC;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Nhava Sheva, India;;;;
-MUNDO ACERO;PAILAS DE ALUMINIO;20ST;1.459;1.750;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;;;;
-MUNDO METAL;PAILAS DE ALUMINIO;20ST;1.459;1.750;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;;;;
-MUNDO ACERO;PAILAS DE ALUMINIO;20ST;1.177;1.750;500;55;50;VENEZUELA, LA GUAIRA;Estambul, Turquia;;;;
-CASABLANCA;PAILAS DE ALUMINIO;20ST;240;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
-CASABLANCA;PAILAS DE ALUMINIO;20ST;60;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ningbo, China;;;;
-MUNDO METAL;PERFIL ALUM;40HC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.200,00;1.700,00
-CASABLANCA;PERFIL ALUM;40HC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.200,00;1.700,00
-CASABLANCA;RIN DE ALUMINIO;40HC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.100,00;1.100,00
-MAB COMPRESSOR;HVAC;40HC;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Frisco City, Estados Unidos;;;;
-RECUPERADORA GUARICO;UBC;40HC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.100,00;1.100,00
-COMERCIALIZADORA NS;UBC;40HC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;450;1.100,00;1.100,00
-RECUPERADORA GUARICO;UBC;40HC;170;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
-MUNDO METAL;UBC;40HC;170;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
-CASABLANCA;FOIL;40HC;1.836;1.900;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;;;;
-MUNDO ACERO;ACERO;40HC;80;2.050;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
-COMERCIALIZADORA NS;ACERO;40HC;80;2.050;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
-THE COMPANY;ACR;40HC;170;3.550;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
-CASABLANCA;COBRE;40HC;1.282;11.500;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;450;1.600,00;1.950,00
-MAB COMPRESSOR;SEAL UNITS;40HC;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Frisco City, Estados Unidos;550;;;
-PINAR DEL RIO;SEAL UNITS;40HC;0;0;;0;0;ESTADOS UNIDOS, MIAMI;Frisco City, Estados Unidos;550;;;
-AM SCRAP METAL;SEAL UNITS;20ST;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Frisco City, Estados Unidos;550;;;
-FURIMETALES;COBRE;40HC;1.282;11.500;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;450;1.600,00;1.950,00
-MULTIRECICLAJES;COBRE;40HC;1.282;11.500;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.600,00;1.650,00
-MUNDO ACERO;COBRE;40HC;1.282;11.500;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.600,00;1.600,00
-FURIMETALES;COBRE;40HC;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;;;;
+</div>
+
+<script id="csv-data" type="text/plain">
+MATERIAL;FLETE MARITIMO;SALIDA;BOLIPUERTO;INTER SHIP;COMISION;ORIGEN Y PUERTO;PAIS Y PUERTO DESTINO;ACARREO;KCI;ARANCEL;FLETE MIAMI
+HIERRO;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+ACERO;100;0;0;60;0;PUERTO RICO, PUERTO DE SAN JUAN;Kaohsiung, Taiwan;;;;
+ACR;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Loxley, Estados Unidos;0;0;0;950
+RIELES;1.815;1.580;500;55;50;VENEZUELA, LA GUAIRA;Qasim, Pakistan;;;;
+ALUMINIO DURO;920;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ennore, India;;;;
+ALUMINIO DURO;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
+ALUMINIO DURO;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
+COBRE;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;East Hartford, Estados Unidos;0;0;0;644
+ALUMINIO T/T;1.177;1.750;500;55;50;VENEZUELA, LA GUAIRA;Estambul, Turquia;;;;
+ALUMINIO T/T;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
+EC WIRE;1.000;0;0;950;0;COLOMBIA, BARRANQUILLA;Everglades, Estados Unidos;550;400;3.800,00;1.700,00
+EXTRUSION 6063;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Pennsylvania, Estados Unidos;0;0;0;1700
+ALUMINIO T/T;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Nhava Sheva, India;;;;
+PAILAS DE ALUMINIO;1.459;1.750;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;;;;
+PAILAS DE ALUMINIO;1.177;1.750;500;55;50;VENEZUELA, LA GUAIRA;Estambul, Turquia;;;;
+PAILAS DE ALUMINIO;240;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
+PAILAS DE ALUMINIO;60;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ningbo, China;;;;
+PERFIL ALUM;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.200,00;1.700,00
+RIN DE ALUMINIO;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.100,00;1.100,00
+HVAC;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Frisco City, Estados Unidos;;;;
+UBC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.100,00;1.100,00
+UBC;170;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
+FOIL;1.836;1.900;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;;;;
+ACERO;80;2.050;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
+ACR;170;3.550;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
+COBRE;1.282;11.500;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;450;1.600,00;1.950,00
+SEAL UNITS;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Frisco City, Estados Unidos;550;;;
+COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;;;;
 </script>
-    <script>
-        // Función para limpiar y normalizar valores
-        function clean(val) {
-            if (!val) return "";
-            return String(val).normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ").trim().toUpperCase();
+
+<script>
+    let db = [];
+    const LBS_TO_TM = 2204.62;
+
+    function parseCSV(text) {
+        const lines = text.trim().split('\n');
+        const headers = lines[0].split(';').map(h => h.trim());
+        const result = [];
+        for(let i=1; i<lines.length; i++) {
+            const currentline = lines[i].split(';');
+            if(currentline.length < 2) continue;
+            let obj = {};
+            for(let j=0; j<headers.length; j++) {
+                let val = currentline[j] ? currentline[j].trim() : '';
+                if(val === '-' || val === '') val = '0';
+                obj[headers[j]] = val;
+            }
+            result.push(obj);
+        }
+        return result;
+    }
+
+    function cleanNum(str) {
+        if(typeof str === 'number') return str;
+        return parseFloat(str.replace(/\./g, '').replace(/,/g, '.')) || 0;
+    }
+
+    function fmt(num, isMoney=true) {
+        return new Intl.NumberFormat('en-US', { 
+            style: isMoney ? 'currency' : 'decimal', 
+            currency: 'USD',
+            maximumFractionDigits: 2 
+        }).format(num);
+    }
+
+    const dom = {
+        mat: document.getElementById('material'),
+        dest: document.getElementById('destino'),
+        qty: document.getElementById('quantity'),
+        unit: document.getElementById('unit'),
+        buy: document.getElementById('purchasePrice'),
+        sell: document.getElementById('salePrice'),
+        margin: document.getElementById('profitMargin'),
+        manual: document.getElementById('manualCost'),
+        pickup: document.getElementById('pickupOverride'),
+        btn: document.getElementById('btnCalculate'),
+        results: document.getElementById('resultsArea'),
+        details: document.getElementById('detailsList'),
+        suggestions: document.getElementById('suggestionsContainer'),
+        manualWarning: document.getElementById('manualWarning')
+    };
+
+    function init() {
+        const rawData = document.getElementById('csv-data').textContent;
+        const rows = parseCSV(rawData);
+        const unique = new Set();
+        db = rows.filter(row => {
+            const key = row['MATERIAL'] + '|' + row['PAIS Y PUERTO DESTINO'];
+            const isDup = unique.has(key);
+            unique.add(key);
+            return !isDup;
+        });
+
+        const mats = [...new Set(db.map(x => x['MATERIAL']))].sort();
+        dom.mat.innerHTML = '<option value="">-- Seleccione Material --</option>';
+        mats.forEach(m => dom.mat.add(new Option(m, m)));
+    }
+
+    dom.mat.addEventListener('change', () => {
+        const val = dom.mat.value;
+        dom.dest.innerHTML = '<option value="">-- Seleccione Destino --</option>';
+        dom.dest.disabled = !val;
+        if(val) {
+            const dests = db.filter(r => r['MATERIAL'] === val).map(r => r['PAIS Y PUERTO DESTINO']).sort();
+            dests.forEach(d => dom.dest.add(new Option(d, d)));
+        }
+        dom.results.classList.add('hidden');
+    });
+
+    dom.unit.addEventListener('change', () => {
+        const u = dom.unit.value;
+        document.getElementById('lblBuy').textContent = `Compra (USD/${u})`;
+        document.getElementById('lblSell').textContent = `Venta (USD/${u})`;
+        document.getElementById('lblLogisticUnit').textContent = `Costo por ${u}:`;
+    });
+
+    function calculate() {
+        if(!dom.mat.value || !dom.dest.value) {
+            if(dom.results.classList.contains('hidden')) alert('Seleccione Material y Destino');
+            return;
         }
         
-        // Función para formatear números con separadores de miles
-        function formatNumber(num) {
-            if (isNaN(num)) return "0";
-            let absNum = Math.abs(num);
-            let parts = absNum.toFixed(2).split('.');
-            let integerPart = parts[0];
-            let decimalPart = parts[1];
-            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-            let formatted = decimalPart === "00" ? integerPart : (integerPart + "," + decimalPart);
-            return (num < 0 ? "-" : "") + formatted;
+        const q = parseFloat(dom.qty.value) || 0;
+        if(q <= 0) { 
+             if(dom.results.classList.contains('hidden')) alert('Ingrese cantidad válida'); 
+             return; 
         }
+
+        const row = db.find(r => r['MATERIAL'] === dom.mat.value && r['PAIS Y PUERTO DESTINO'] === dom.dest.value);
+        if(!row) return;
+
+        const isLbs = dom.unit.value === 'LBS';
+        const tons = isLbs ? q / LBS_TO_TM : q;
+        const containers = Math.ceil(tons / 27.5);
+
+        // Costos
+        const c = {
+            ocean: cleanNum(row['FLETE MARITIMO']),
+            salida: cleanNum(row['SALIDA']),
+            bolipuerto: cleanNum(row['BOLIPUERTO']),
+            inter: cleanNum(row['INTER SHIP']),
+            com: cleanNum(row['COMISION']),
+            acarreo: cleanNum(row['ACARREO']),
+            kci: cleanNum(row['KCI']),
+            arancel: cleanNum(row['ARANCEL']),
+            miami: cleanNum(row['FLETE MIAMI']),
+            pickup: dom.pickup.checked ? 500 : 0
+        };
+
+        const costPerCont = c.ocean + c.salida + c.bolipuerto + c.inter + c.com + c.acarreo + c.kci + c.arancel + c.miami + c.pickup;
+        let totalLog = costPerCont * containers;
+
+        // Manual Override
+        const manual = parseFloat(dom.manual.value);
+        const hasManual = !isNaN(manual) && manual > 0;
         
-        // Función para convertir valores a números
-        function toNumber(val) {
-            if (typeof val === 'number') return val;
-            if (!val || String(val).trim() === '-' || String(val).trim() === '') return 0;
-            return parseFloat(String(val).replace(/\./g, '').replace(/,/g, '.').replace(/\s/g, '')) || 0;
+        if(hasManual) {
+            totalLog = manual;
+            dom.manualWarning.classList.remove('hidden');
+        } else {
+            dom.manualWarning.classList.add('hidden');
         }
+
+        const logUnit = totalLog / q;
+
+        const pBuy = parseFloat(dom.buy.value) || 0;
+        const pSell = parseFloat(dom.sell.value) || 0;
+        const totalBuy = q * pBuy;
+        const totalSell = q * pSell;
+        const totalCost = totalBuy + totalLog;
+        const gross = totalSell - totalCost;
+        const roi = totalCost > 0 ? (gross / totalCost) * 100 : 0;
+
+        // Sugerencias
+        const margin = parseFloat(dom.margin.value) || 0;
+        if (margin > 0) {
+            dom.suggestions.classList.remove('hidden');
+            const unitCostTotal = pBuy + logUnit;
+            const idealSell = margin < 100 ? unitCostTotal / (1 - (margin/100)) : 0;
+            const idealBuy = pSell - logUnit - (pSell * (margin/100));
+            document.getElementById('resIdealSell').textContent = fmt(idealSell);
+            document.getElementById('resIdealBuy').textContent = fmt(idealBuy);
+        } else {
+            dom.suggestions.classList.add('hidden');
+        }
+
+        // Render UI
+        document.getElementById('resTotalLogistic').textContent = fmt(totalLog);
+        document.getElementById('resLogisticUnit').textContent = fmt(logUnit);
+        document.getElementById('resContainers').textContent = containers;
         
+        document.getElementById('resGrossProfit').textContent = fmt(gross);
+        document.getElementById('resGrossProfit').className = gross >= 0 ? 'text-success' : 'text-danger';
         
-        // Constante para conversión de libras a toneladas
-        const LBS_TO_TM = 2204.62; // 1 tonelada métrica = 2204.62 libras
+        document.getElementById('resRoi').textContent = roi.toFixed(1) + '%';
+        document.getElementById('resRoi').className = roi >= 0 ? 'text-success' : 'text-danger';
+
+        renderDetails(c, costPerCont);
+        dom.results.classList.remove('hidden');
         
-        // Seleccionar elementos del DOM
-        const selects = {
-            material: document.getElementById('material'),
-            proveedor: document.getElementById('proveedor'),
-            destino: document.getElementById('destino'),
-            quantityUnit: document.getElementById('quantityUnit')
+        // Scroll a resultados si es móvil
+        if(window.innerWidth < 600) {
+            dom.results.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+    }
+
+    function renderDetails(c, total) {
+        let html = '';
+        const add = (lbl, val) => {
+            if(val > 0) html += `<div class="row-item"><span class="text-light">${lbl}</span><span>${fmt(val)}</span></div>`;
         };
         
-        const pickupByProviderCheckbox = document.getElementById('pickupByProvider');
-        const costDetails = document.getElementById('costDetails');
-        const labelLogisticCostPerUnit = document.getElementById('labelLogisticCostPerUnit');
-
-        const inputs = {
-            quantity: document.getElementById('quantity'),
-            purchasePrice: document.getElementById('purchasePrice'),
-            salePrice: document.getElementById('salePrice'),
-            profitMargin: document.getElementById('profitMargin'),
-            manualLogisticCost: document.getElementById('manualLogisticCost')
-        };
-        
-        const btnCalculate = document.getElementById('calculateBtn');
-        // CSV upload removed: file input and fileName elements no longer present (references removed)
-        
-        const summaryFields = {
-            provider: document.getElementById('summaryProvider'),
-            destination: document.getElementById('summaryDestination'),
-            totalLogisticCost: document.getElementById('summaryTotalLogisticCost'),
-            logisticCostPerTon: document.getElementById('summaryLogisticCostPerTon')
-        };
-        
-        const detailFields = {
-            fleteMaritimo: document.getElementById('detailFleteMaritimo'),
-            salida: document.getElementById('detailSalida'),
-            bolipuerto: document.getElementById('detailBolipuerto'),
-            interShip: document.getElementById('detailInterShip'),
-            comision: document.getElementById('detailComision'),
-            pickupCost: document.getElementById('detailPickupCost'),
-            acarreo: document.getElementById('detailAcarreo'),
-            kci: document.getElementById('detailKci'),
-            arancel: document.getElementById('detailArancel'),
-            fleteMiami: document.getElementById('detailFleteMiami'),
-            totalCostPerContainer: document.getElementById('detailTotalCostPerContainer')
-        };
-        
-        const resultFields = {
-            directCost: document.getElementById('directCost'),
-            totalInvoicing: document.getElementById('totalInvoicing'),
-            grossProfit: document.getElementById('grossProfit'),
-            roi: document.getElementById('roi'),
-            idealSalePrice: document.getElementById('idealSalePrice'),
-            idealPurchasePrice: document.getElementById('idealPurchasePrice')
-        };
-        
-        const messageBox = document.getElementById('messageBox');
-        const containerInfo = document.getElementById('containerInfo');
-        const numContainers = document.getElementById('numContainers');
-        const totalQuantity = document.getElementById('totalQuantity');
-        const quantityUnitLabel = document.getElementById('quantityUnitLabel');
-        // Elementos de estado de BD eliminados: no referenciados para evitar errores
-        const pickupCostContainer = document.getElementById('pickupCostContainer');
-        
-        // Cachear selectores que se usan repetidamente para evitar consultas DOM repetidas
-        const purchaseLabel = document.querySelector('label[for="purchasePrice"]');
-        const saleLabel = document.querySelector('label[for="salePrice"]');
-        const usaOnlyFields = document.querySelectorAll('.usa-only');
-        
-        // Variables globales
-        let data = [];
-        let lastMatch = null;
-        let calculatedLogisticCost = 0;
-        
-        // Funciones auxiliares
-        function showMessage(message, type = 'success') {
-            messageBox.textContent = message;
-            messageBox.className = 'message-box ' + (type === 'success' ? 'message-success' : 'message-error');
-            messageBox.style.display = 'block';
-            setTimeout(() => { messageBox.style.display = 'none'; }, 4000);
-        }
-        
-        function fillSelect(select, opciones) {
-            select.innerHTML = '<option value="">-- Seleccione --</option>';
-            opciones.forEach(op => {
-                let option = document.createElement('option');
-                option.value = op;
-                option.textContent = op;
-                select.appendChild(option);
-            });
-        }
-        
-        function uniqueValues(col, arr) {
-            return [...new Set(arr.map(x => clean(x[col])))].filter(Boolean).sort();
+        const manual = parseFloat(dom.manual.value);
+        if(!isNaN(manual) && manual > 0) {
+            dom.details.innerHTML = '<div style="text-align:center; color:var(--brand-red); padding:10px; font-style:italic">Desglose desactivado por ajuste manual</div>';
+            return;
         }
 
-        // Actualizar labels de precios según la unidad seleccionada
-        function updatePriceLabels() {
-            const unit = selects.quantityUnit.value || 'TM';
-            if (purchaseLabel) purchaseLabel.textContent = 'Precio de Compra (USD / ' + unit + ')';
-            if (saleLabel) saleLabel.textContent = 'Precio de Venta (USD / ' + unit + ')';
-        }
+        add('Flete Marítimo', c.ocean);
+        add('Salida', c.salida);
+        add('Bolipuerto', c.bolipuerto);
+        add('Inter Ship', c.inter);
+        add('Comisión', c.com);
+        add('Acarreo (USA)', c.acarreo);
+        add('KCI (USA)', c.kci);
+        add('Arancel (USA)', c.arancel);
+        add('Flete Miami', c.miami);
+        add('Recogida Proveedor', c.pickup);
         
-        // Función para verificar si el destino es Estados Unidos
-        function isUSADestination(destino) {
-            return destino && destino.includes("ESTADOS UNIDOS");
-        }
-        
-        // Convertir cantidad a toneladas según la unidad seleccionada
-        function convertToTons(quantity, unit) {
-            if (unit === 'LBS') {
-                // Convertir libras a toneladas (1 tonelada = 2204.62 libras)
-                return quantity / LBS_TO_TM;
-            }
-            return quantity; // Ya está en toneladas
-        }
-        
-        // (Funciones auxiliares no utilizadas eliminadas para reducir tamaño)
-        
-        // Actualizar base de datos local
-        function updateLocalDB(newData) {
-            data = newData;
-            
-            // Información de estado de BD eliminada; no actualizamos contadores en UI
-            
-            // Resetear selects y campos
-            Object.values(selects).forEach(s => {
-                if (s.id !== 'quantityUnit') s.innerHTML = '';
-            });
-            inputs.quantity.value = 0;
-            inputs.purchasePrice.value = 0;
-            inputs.salePrice.value = 0;
-            inputs.profitMargin.value = 0;
-            inputs.manualLogisticCost.value = 0;
-            clearResults();
-            
-            // Llenar los selects
-            fillSelect(selects.material, uniqueValues('MATERIAL', data));
-            
-            showMessage('Base de datos cargada correctamente');
-        }
-        
-        // Cargar datos CSV embebido al iniciar (defensivo)
-        window.addEventListener('DOMContentLoaded', function() {
-            try {
-                const csvScript = document.getElementById('csv-data');
-                const csvText = csvScript && csvScript.textContent ? csvScript.textContent.trim() : '';
-                if (!csvText) {
-                    // No CSV embebido: inicializar labels y salir
-                    updatePriceLabels();
-                    return;
-                }
+        html += `<div class="row-item highlight" style="margin-top:5px"><span>TOTAL / CONTENEDOR</span><span>${fmt(total)}</span></div>`;
+        dom.details.innerHTML = html;
+    }
 
-                Papa.parse(csvText, {
-                    header: true,
-                    delimiter: ";",
-                    skipEmptyLines: true,
-                    complete: function(res) {
-                        let datosLimpios = res.data.map(row => {
-                            let obj = {};
-                            for (let k in row) {
-                                // Limpiar nombres de columnas y valores
-                                let cleanKey = clean(k);
-                                obj[cleanKey] = clean(row[k]);
-                            }
+    dom.btn.addEventListener('click', calculate);
+    
+    dom.pickup.addEventListener('change', () => {
+        if(!dom.results.classList.contains('hidden')) calculate();
+    });
 
-                            // Convertir campos numéricos
-                            ['FLETE MARITIMO', 'SALIDA', 'BOLIPUERTO', 'INTER SHIP', 'COMISION', 'ACARREO', 'KCI', 'ARANCEL', 'FLETE MIAMI'].forEach(
-                                fld => obj[fld] = toNumber(obj[fld]));
-                            return obj;
-                        });
-                        updateLocalDB(datosLimpios);
-                        updatePriceLabels();
-                    },
-                    error: function(err) {
-                        showMessage('Error al parsear CSV embebido: ' + (err && err.message ? err.message : err), 'error');
-                        updatePriceLabels();
-                    }
-                });
-            } catch (err) {
-                showMessage('Error al procesar CSV embebido: ' + err.message, 'error');
-                updatePriceLabels();
-            }
-        });
-        
-        // Event listeners para los select
-        selects.material.addEventListener('change', function() {
-            const mat = clean(this.value);
-            let proveedores = uniqueValues('PROVEEDOR', data.filter(r=>r['MATERIAL']===mat));
-            fillSelect(selects.proveedor, proveedores);
-            fillSelect(selects.destino, []);
-            clearResults();
-        });
-        
-        selects.proveedor.addEventListener('change', function() {
-            const mat = clean(selects.material.value);
-            const prov = clean(this.value);
-            let destinos = uniqueValues('PAIS Y PUERTO DESTINO', data.filter(r=>r['MATERIAL']===mat && r['PROVEEDOR']===prov));
-            fillSelect(selects.destino, destinos);
-            clearResults();
-        });
-        
-        selects.destino.addEventListener('change', function() {
-            clearResults();
-        });
-        
-        // Event listener para el cambio de unidad
-        selects.quantityUnit.addEventListener('change', function() {
-            quantityUnitLabel.textContent = this.value;
-            // Actualizar el label de costo logístico por unidad
-            labelLogisticCostPerUnit.textContent = 'Costo Logístico por ' + this.value + ':';
-            // Actualizar labels de precio para dejar claro la unidad
-            updatePriceLabels();
-            clearResults();
-        });
-        
-        // Event listener para el checkbox de recogida por proveedor
-        pickupByProviderCheckbox.addEventListener('change', function() {
-            if (lastMatch) {
-                // Recalcular si ya hay un cálculo previo
-                btnCalculate.click();
-            }
-        });
-        
-        // Event listener para el costo logístico manual
-        inputs.manualLogisticCost.addEventListener('change', function() {
-            if (lastMatch) {
-                const manualCost = parseFloat(this.value);
-                if (!isNaN(manualCost) && manualCost > 0) {
-                    // Recalcular con el costo manual
-                    recalculateWithManualCost(manualCost);
-                }
-            }
-        });
-        
-        // Función para calcular la negociación
-        btnCalculate.addEventListener('click', function() {
-            const mat = clean(selects.material.value),
-                prov = clean(selects.proveedor.value),
-                dest = clean(selects.destino.value),
-                quantity = parseFloat(inputs.quantity.value),
-                unit = selects.quantityUnit.value,
-                purchasePrice = parseFloat(inputs.purchasePrice.value),
-                salePrice = parseFloat(inputs.salePrice.value),
-                profitMargin = parseFloat(inputs.profitMargin.value);
-        
-            // Validaciones
-            if ([mat, prov, dest].some(x => !x)) {
-                showMessage('Por favor selecciona todas las opciones', 'error');
-                return;
-            }
-            
-            if (isNaN(quantity) || quantity <= 0) {
-                showMessage('La cantidad debe ser mayor a cero', 'error');
-                return;
-            }
+    dom.manual.addEventListener('input', () => {
+        if(!dom.results.classList.contains('hidden')) calculate();
+    });
+    
+    dom.margin.addEventListener('input', () => {
+         if(!dom.results.classList.contains('hidden')) calculate();
+    });
 
-            // Validaciones adicionales
-            if (isNaN(purchasePrice) || purchasePrice < 0) {
-                showMessage('Precio de compra inválido', 'error');
-                return;
-            }
-            if (isNaN(salePrice) || salePrice < 0) {
-                showMessage('Precio de venta inválido', 'error');
-                return;
-            }
-            if (isNaN(profitMargin) || profitMargin < 0) {
-                showMessage('Margen de utilidad inválido', 'error');
-                return;
-            }
-            
-            // Convertir a toneladas para cálculo de contenedores
-            const tons = convertToTons(quantity, unit);
-            
-            // Buscar coincidencia en los datos
-            let match = data.find(r =>
-                r['MATERIAL']===mat &&
-                r['PROVEEDOR']===prov &&
-                r['PAIS Y PUERTO DESTINO']===dest
-            );
-            
-            if (!match) {
-                showMessage('No hay costos para la combinación elegida', 'error');
-                updateSummaryFields(null); 
-                updateResultFields(null);
-                return;
-            }
-            
-            // Calcular número de contenedores necesarios (27.5 toneladas por contenedor)
-            const numContenedores = Math.ceil(tons / 27.5);
-            containerInfo.classList.remove('hidden');
-            numContainers.textContent = numContenedores;
-            totalQuantity.textContent = formatNumber(quantity);
-            
-            // Guardar el último match para recálculos
-            lastMatch = { ...match, tons, quantity, unit, purchasePrice, salePrice, profitMargin, numContenedores };
-            
-            // Obtener costos
-            let fleteMaritimo = toNumber(match['FLETE MARITIMO']);
-            let salida = toNumber(match['SALIDA']);
-            let bolipuerto = toNumber(match['BOLIPUERTO']);
-            let interShip = toNumber(match['INTER SHIP']);
-            let comision = toNumber(match['COMISION']);
-            
-            // Costos específicos para Estados Unidos
-            let isUSA = isUSADestination(dest);
-            let acarreo = isUSA ? toNumber(match['ACARREO']) : 0;
-            let kci = isUSA ? toNumber(match['KCI']) : 0;
-            let arancel = isUSA ? toNumber(match['ARANCEL']) : 0;
-            let fleteMiami = isUSA ? toNumber(match['FLETE MIAMI']) : 0;
-            
-            // Calcular costo de recogida por contenedor
-            let pickupCostPerContainer = 0;
-            if (pickupByProviderCheckbox.checked) {
-                pickupCostPerContainer = (prov === 'COMERCIALIZADORA NS') ? 250 : 500;
-            }
-            
-            // Calcular costos logísticos por contenedor (eliminado GASTOS LOGISTICOS)
-            let logisticCostPerContainer = fleteMaritimo + salida + bolipuerto + interShip + comision + acarreo + kci + arancel + fleteMiami + pickupCostPerContainer;
-            calculatedLogisticCost = logisticCostPerContainer * numContenedores;
-            
-            // Si hay un costo manual, usarlo en lugar del calculado
-            const manualCost = parseFloat(inputs.manualLogisticCost.value);
-            const totalLog = !isNaN(manualCost) && manualCost > 0 ? manualCost : calculatedLogisticCost;
-            
-            // Calcular costo por unidad según la unidad seleccionada
-            let logisticCostPerUnit;
-            if (unit === 'LBS') {
-                // Convertir el costo total a costo por libra
-                logisticCostPerUnit = totalLog / quantity;
-            } else {
-                // TM - costo por tonelada
-                logisticCostPerUnit = totalLog / tons;
-            }
-            
-            // Calcular costos directos y utilidad (usar toneladas para precios que son por TM)
-            // `tons` ya es la cantidad convertida a toneladas si la unidad seleccionada fue LBS
-            let directCost = tons * (isNaN(purchasePrice) ? 0 : purchasePrice);
-            let totalInvoicing = isNaN(salePrice) ? 0 : tons * salePrice;
-            let totalDirectCost = directCost + totalLog;
-            let grossProfit = totalInvoicing - totalDirectCost;
-            
-            // Calcular ROI
-            let roi = totalDirectCost > 0 ? (grossProfit / totalDirectCost) * 100 : 0;
-            
-            // Calcular precios ideales
-            let idealSalePrice = 0, idealPurchasePrice = 0;
-            if (!isNaN(profitMargin) && profitMargin !== 0) {
-                const costoPorUnidad = (isNaN(purchasePrice) ? 0 : purchasePrice) + logisticCostPerUnit;
-                idealSalePrice = costoPorUnidad / (1 - profitMargin/100);
-                
-                if (!isNaN(salePrice) && salePrice > 0) {
-                    idealPurchasePrice = salePrice - logisticCostPerUnit - (salePrice * profitMargin/100);
-                }
-            }
-            
-            // Actualizar la interfaz
-            updateSummaryFields({
-                proveedor: match['PROVEEDOR'],
-                destino: match['PAIS Y PUERTO DESTINO'],
-                totalLog,
-                logisticCostPerUnit,
-                unit,
-                quantity,
-                tons
-            });
-            
-            updateDetailFields({
-                fleteMaritimo,
-                salida,
-                bolipuerto,
-                interShip,
-                comision,
-                pickupCostPerContainer,
-                acarreo,
-                kci,
-                arancel,
-                fleteMiami,
-                logisticCostPerContainer,
-                isUSA
-            });
-            
-            updateResultFields({ 
-                directCost, 
-                totalInvoicing, 
-                grossProfit, 
-                roi, 
-                idealSalePrice, 
-                idealPurchasePrice 
-            });
-            
-            showMessage('Cálculo exitoso');
-        });
-        
-        // Función para recalcular con costo manual
-        function recalculateWithManualCost(manualCost) {
-            if (!lastMatch) return;
-            
-            const { quantity, unit, purchasePrice, salePrice, profitMargin } = lastMatch;
+    init();
+</script>
 
-            // Calcular cantidad en toneladas y costo por unidad según la unidad seleccionada
-            const tons = convertToTons(quantity, unit);
-            let logisticCostPerUnit;
-            if (unit === 'LBS') {
-                // Convertir el costo total a costo por libra
-                logisticCostPerUnit = manualCost / quantity;
-            } else {
-                // TM - costo por tonelada
-                logisticCostPerUnit = manualCost / tons;
-            }
-
-            // Calcular costos directos y utilidad (usar toneladas para precios por TM)
-            let directCost = tons * (isNaN(purchasePrice) ? 0 : purchasePrice);
-            let totalInvoicing = isNaN(salePrice) ? 0 : tons * salePrice;
-            let totalDirectCost = directCost + manualCost;
-            let grossProfit = totalInvoicing - totalDirectCost;
-            
-            // Calcular ROI
-            let roi = totalDirectCost > 0 ? (grossProfit / totalDirectCost) * 100 : 0;
-            
-            // Calcular precios ideales
-            let idealSalePrice = 0, idealPurchasePrice = 0;
-            if (!isNaN(profitMargin) && profitMargin !== 0) {
-                const costoPorUnidad = (isNaN(purchasePrice) ? 0 : purchasePrice) + logisticCostPerUnit;
-                idealSalePrice = costoPorUnidad / (1 - profitMargin/100);
-                
-                if (!isNaN(salePrice) && salePrice > 0) {
-                    idealPurchasePrice = salePrice - logisticCostPerUnit - (salePrice * profitMargin/100);
-                }
-            }
-            
-            // Actualizar la interfaz
-            updateSummaryFields({
-                proveedor: lastMatch['PROVEEDOR'],
-                destino: lastMatch['PAIS Y PUERTO DESTINO'],
-                totalLog: manualCost,
-                logisticCostPerUnit,
-                unit: lastMatch.unit,
-                quantity: lastMatch.quantity,
-                tons: lastMatch.tons
-            });
-            
-            updateResultFields({ 
-                directCost, 
-                totalInvoicing, 
-                grossProfit, 
-                roi, 
-                idealSalePrice, 
-                idealPurchasePrice 
-            });
-            
-            showMessage('Cálculo actualizado con costo manual');
-        }
-        
-        // Actualizar campos del resumen
-        function updateSummaryFields(obj) {
-            containerInfo.classList.toggle('hidden', !obj || obj.quantity <= 0);
-            
-            if (!obj) {
-                for (let field in summaryFields) {
-                    summaryFields[field].textContent = 'N/A';
-                }
-                return;
-            }
-            
-            summaryFields.provider.textContent = obj.proveedor || 'N/A';
-            summaryFields.destination.textContent = obj.destino || 'N/A';
-            summaryFields.totalLogisticCost.textContent = formatNumber(obj.totalLog) + ' USD';
-            summaryFields.logisticCostPerTon.textContent = formatNumber(obj.logisticCostPerUnit) + ' USD/' + (obj.unit || 'TM');
-        }
-        
-        // Actualizar campos de detalles de costos
-        function updateDetailFields(obj) {
-            if (!obj) {
-                for (let field in detailFields) {
-                    detailFields[field].textContent = '0 USD';
-                }
-                costDetails.classList.add('hidden');
-                return;
-            }
-            
-            detailFields.fleteMaritimo.textContent = formatNumber(obj.fleteMaritimo) + ' USD';
-            detailFields.salida.textContent = formatNumber(obj.salida) + ' USD';
-            detailFields.bolipuerto.textContent = formatNumber(obj.bolipuerto) + ' USD';
-            detailFields.interShip.textContent = formatNumber(obj.interShip) + ' USD';
-            detailFields.comision.textContent = formatNumber(obj.comision) + ' USD';
-            
-            // Mostrar u ocultar campos específicos para Estados Unidos
-            usaOnlyFields.forEach(field => {
-                field.style.display = obj.isUSA ? 'flex' : 'none';
-            });
-            
-            // Mostrar u ocultar costo de recogida
-            if (obj.pickupCostPerContainer > 0) {
-                pickupCostContainer.style.display = 'flex';
-                detailFields.pickupCost.textContent = formatNumber(obj.pickupCostPerContainer) + ' USD';
-            } else {
-                pickupCostContainer.style.display = 'none';
-            }
-            
-            detailFields.acarreo.textContent = formatNumber(obj.acarreo) + ' USD';
-            detailFields.kci.textContent = formatNumber(obj.kci) + ' USD';
-            detailFields.arancel.textContent = formatNumber(obj.arancel) + ' USD';
-            detailFields.fleteMiami.textContent = formatNumber(obj.fleteMiami) + ' USD';
-            detailFields.totalCostPerContainer.textContent = formatNumber(obj.logisticCostPerContainer) + ' USD';
-            
-            costDetails.classList.remove('hidden');
-        }
-        
-        // Actualizar campos de resultados
-        function updateResultFields(obj) {
-            if (!obj) {
-                resultFields.directCost.textContent = '0 USD';
-                resultFields.totalInvoicing.textContent = '0 USD';
-                resultFields.grossProfit.textContent = '0 USD';
-                resultFields.roi.textContent = '0%';
-                resultFields.idealSalePrice.textContent = '0 USD';
-                resultFields.idealPurchasePrice.textContent = '0 USD';
-                return;
-            }
-            
-            resultFields.directCost.textContent = formatNumber(obj.directCost) + ' USD';
-            resultFields.totalInvoicing.textContent = formatNumber(obj.totalInvoicing) + ' USD';
-            resultFields.grossProfit.textContent = formatNumber(obj.grossProfit) + ' USD';
-            resultFields.roi.textContent = formatNumber(obj.roi) + '%';
-            resultFields.idealSalePrice.textContent = formatNumber(obj.idealSalePrice) + ' USD';
-            resultFields.idealPurchasePrice.textContent = formatNumber(obj.idealPurchasePrice) + ' USD';
-            
-            // Resaltar la utilidad según si es positiva o negativa
-            if (obj.grossProfit < 0) {
-                resultFields.grossProfit.className = 'result-value profit-negative';
-            } else {
-                resultFields.grossProfit.className = 'result-value profit-positive';
-            }
-            
-            // Resaltar el ROI según si es positivo o negativo
-            if (obj.roi < 0) {
-                resultFields.roi.className = 'result-value profit-negative';
-            } else {
-                resultFields.roi.className = 'result-value profit-positive';
-            }
-        }
-        
-        // Limpiar resultados
-        function clearResults() {
-            updateSummaryFields(null);
-            updateDetailFields(null);
-            updateResultFields(null);
-            containerInfo.classList.add('hidden');
-            lastMatch = null;
-            calculatedLogisticCost = 0;
-            
-            // Ocultar campos específicos para Estados Unidos al limpiar
-            usaOnlyFields.forEach(field => {
-                field.style.display = 'none';
-            });
-            
-            // Ocultar campo de recogida
-            pickupCostContainer.style.display = 'none';
-        }
-        
-        // CSV upload removed: event listener eliminated
-        
-        // Touchstart handler removed (iOS-specific behavior eliminated)
-        
-        // Mejorar el rendimiento en dispositivos móviles
-        if ('connection' in navigator && navigator.connection.saveData === true) {
-            // Modo ahorro de datos: deshabilitar algunas animaciones via clase
-            document.documentElement.style.setProperty('--primary', '#1e3a8a');
-            document.documentElement.classList.add('reduced-motion');
-        }
-    </script>
 </body>
 </html>
