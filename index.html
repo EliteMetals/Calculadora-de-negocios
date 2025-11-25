@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#111827">
-    <title>Calculadora Elite Metals</title>
+    <title>Elite Metals - Master Calculator v4 (Auto)</title>
     <style>
         :root {
-            /* COLORES BASADOS EN EL LOGO ELITE METALS */
-            --brand-red: #d32f2f;       /* Rojo del logo */
-            --brand-red-dark: #b71c1c;  /* Rojo más oscuro para hover */
-            --brand-black: #111827;     /* Negro metálico */
-            --bg-color: #f3f4f6;        /* Gris muy claro para el fondo */
+            --brand-red: #d32f2f;       
+            --brand-red-dark: #b71c1c;  
+            --brand-black: #111827;     
+            --bg-color: #f3f4f6;        
             --card-bg: #ffffff;
             --text-main: #1f2937;
             --text-light: #6b7280;
@@ -31,7 +30,6 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* --- NUEVO ENCABEZADO ESTILO "ELITE" --- */
         header {
             background-color: var(--brand-black);
             color: white;
@@ -46,46 +44,46 @@
             border-bottom: 3px solid var(--brand-red);
         }
 
-        .brand-container {
-            display: flex;
-            flex-direction: column;
-            line-height: 1;
-        }
-
-        .brand-title {
-            font-size: 1.1rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
+        .brand-container { display: flex; flex-direction: column; line-height: 1; }
+        .brand-title { font-size: 1.1rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+        .brand-subtitle { font-size: 0.55rem; color: #9ca3af; letter-spacing: 2px; margin-top: 2px; text-transform: uppercase; }
         .text-elite { color: var(--brand-red); }
         .text-metals { color: #ffffff; }
 
-        .brand-subtitle {
-            font-size: 0.55rem;
-            color: #9ca3af;
-            letter-spacing: 2px;
-            margin-top: 2px;
+        .tabs-container {
+            display: flex;
+            background: #e5e7eb;
+            margin: 1rem auto 0;
+            max-width: 600px;
+            padding: 4px;
+            border-radius: 10px;
+            position: sticky;
+            top: 60px;
+            z-index: 90;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-light);
+            background: transparent;
+            transition: all 0.2s;
             text-transform: uppercase;
         }
-
-        .app-badge {
-            background: rgba(255,255,255,0.1);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            border: 1px solid rgba(255,255,255,0.2);
-            backdrop-filter: blur(4px);
+        
+        .tab.active {
+            background: white;
+            color: var(--brand-red);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* --- CONTENEDOR PRINCIPAL --- */
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
+        .container { max-width: 600px; margin: 0 auto; padding: 1rem; }
 
         .card {
             background: var(--card-bg);
@@ -96,12 +94,11 @@
             border: 1px solid var(--border);
         }
 
-        /* Títulos de secciones */
         h2 { 
             font-size: 1rem; 
             margin: 0 0 1rem 0; 
             color: var(--brand-black); 
-            border-left: 4px solid var(--brand-red); /* Detalle rojo a la izquierda */
+            border-left: 4px solid var(--brand-red);
             padding-left: 10px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -113,7 +110,7 @@
         
         select, input:not([type="checkbox"]) {
             width: 100%;
-            padding: 14px; /* Un poco más alto para dedos */
+            padding: 14px; 
             border: 1px solid #d1d5db;
             border-radius: 8px;
             font-size: 16px; 
@@ -128,18 +125,6 @@
             box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
         }
 
-        select {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1.2em;
-        }
-
-        .input-group { display: flex; gap: 8px; }
-        .input-group input { flex: 1; }
-        .input-group select { width: 90px; background-color: #f9fafb; }
-
-        /* BOTÓN ESTILO BRAND */
         .btn-main {
             width: 100%;
             background: linear-gradient(135deg, var(--brand-red) 0%, var(--brand-red-dark) 100%);
@@ -154,15 +139,11 @@
             transition: transform 0.1s;
             text-transform: uppercase;
             letter-spacing: 1px;
+            margin-top: 10px;
         }
         .btn-main:active { transform: scale(0.98); }
 
-        .results-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        
+        .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .result-box {
             background: #f8fafc;
             padding: 12px;
@@ -171,62 +152,30 @@
             border: 1px solid var(--border);
         }
         .result-box span { display: block; font-size: 0.75rem; color: var(--text-light); margin-bottom: 4px; text-transform: uppercase; }
-        .result-box strong { display: block; font-size: 1.2rem; color: var(--brand-black); }
+        .result-box strong { display: block; font-size: 1.3rem; color: var(--brand-black); }
         
         .text-success { color: var(--success) !important; }
         .text-danger { color: var(--brand-red) !important; }
-
-        .details-toggle {
-            background: none;
-            border: none;
-            color: var(--brand-red);
-            font-size: 0.85rem;
-            width: 100%;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        
-        .row-item { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 10px; border-bottom: 1px dashed #e5e7eb; padding-bottom: 5px; }
-        .row-item:last-child { border-bottom: none; }
-        
-        .row-item.highlight { 
-            background: #fff1f2; /* Fondo rojizo muy suave */
-            padding: 10px; 
-            border-radius: 6px; 
-            border: 1px solid #fecdd3; 
-            font-weight: 700; 
-            color: var(--brand-red-dark); 
-        }
-        
         .hidden { display: none !important; }
         
-        /* Checkbox estilo Elite */
-        .checkbox-wrapper { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            padding: 15px 0; 
-            cursor: pointer; 
-            border-top: 1px solid #eee;
-            margin-top: 10px;
-        }
+        .row-item { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 10px; border-bottom: 1px dashed #e5e7eb; padding-bottom: 5px; }
+        .row-item.highlight { background: #fff1f2; padding: 10px; border-radius: 6px; border: 1px solid #fecdd3; font-weight: 700; color: var(--brand-red-dark); }
         
-        input[type="checkbox"] {
-            appearance: auto;
-            width: 22px;
-            height: 22px;
-            margin: 0;
-            cursor: pointer;
-            accent-color: var(--brand-red); /* Checkbox rojo */
+        .details-toggle {
+            background: none; border: none; color: var(--brand-red); font-size: 0.85rem; width: 100%; padding: 12px; cursor: pointer; font-weight: 600;
         }
+
+        .checkbox-wrapper { display: flex; align-items: center; gap: 12px; padding: 15px 0; cursor: pointer; border-top: 1px solid #eee; margin-top: 10px; }
+        input[type="checkbox"] { appearance: auto; width: 22px; height: 22px; margin: 0; cursor: pointer; accent-color: var(--brand-red); }
+        .input-group { display: flex; gap: 8px; }
+        .input-group input { flex: 1; }
+        .input-group select { width: 90px; background-color: #f9fafb; }
         
-        /* Input manual destacado */
-        #manualCost {
-            background-color: #fff;
-            border: 1px dashed var(--brand-red);
+        .mode-badge {
+            display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px;
         }
+        .badge-broker { background: #e0f2fe; color: #0369a1; }
+        .badge-trade { background: #ffedd5; color: #c2410c; }
     </style>
 </head>
 <body>
@@ -238,54 +187,72 @@
         </div>
         <div class="brand-subtitle">GROUP CORP &bull; FINANZAS</div>
     </div>
-    <div class="app-badge">
-        Calculadora
-    </div>
 </header>
 
+<div class="tabs-container">
+    <button class="tab active" onclick="setMode('broker')">Broker (Export)</button>
+    <button class="tab" onclick="setMode('trade')">Trade (USA)</button>
+</div>
+
 <div class="container">
+
     <div class="card">
-        <h2><i style="color:var(--brand-red)">&#9881;</i> Parámetros</h2>
-        
+        <h2><i style="color:var(--brand-red)">&#9881;</i> Parámetros <span id="modeLabel" class="mode-badge badge-broker">Broker</span></h2>
+
         <div class="form-group">
             <label>Material</label>
             <select id="material"></select>
         </div>
 
-        <div class="form-group">
-            <label>Destino</label>
-            <select id="destino" disabled><option>Seleccione material primero</option></select>
-        </div>
-
-        <div class="form-group">
-            <label>Cantidad</label>
-            <div class="input-group">
-                <input type="number" id="quantity" placeholder="0" inputmode="decimal">
-                <select id="unit">
-                    <option value="TM">TM</option>
-                    <option value="LBS">LBS</option>
-                </select>
-            </div>
-            <small style="color:var(--text-light); font-size:0.75rem; display:block; margin-top:4px;">Capacidad contenedor: 27.5 TM</small>
-        </div>
-
-        <div class="results-grid">
+        <div id="brokerFields">
             <div class="form-group">
-                <label id="lblBuy">Compra (USD)</label>
-                <input type="number" id="purchasePrice" placeholder="0.00" inputmode="decimal">
+                <label>Destino</label>
+                <select id="destino" disabled><option>Seleccione material primero</option></select>
             </div>
             <div class="form-group">
-                <label id="lblSell">Venta (USD)</label>
-                <input type="number" id="salePrice" placeholder="0.00" inputmode="decimal">
+                <label>Cantidad</label>
+                <div class="input-group">
+                    <input type="number" id="quantity" placeholder="Ej: 25" inputmode="decimal">
+                    <select id="unit">
+                        <option value="TM">TM</option>
+                        <option value="LBS">LBS</option>
+                    </select>
+                </div>
+                <small style="color:var(--text-light); font-size:0.75rem; display:block; margin-top:4px;">Capacidad contenedor: 27.5 TM</small>
             </div>
         </div>
 
-        <div class="form-group">
-            <label>Margen Utilidad Deseado (%)</label>
-            <input type="number" id="profitMargin" placeholder="Opcional" inputmode="decimal">
+        <div id="tradeFields" class="hidden">
+             <div class="results-grid">
+                <div class="form-group">
+                    <label>Peso Carga (LBS)</label>
+                    <input type="number" id="t_weight" placeholder="0" inputmode="decimal">
+                </div>
+                <div class="form-group">
+                    <label>Gasto Logístico Total ($)</label>
+                    <input type="number" id="t_logistic" placeholder="0.00" inputmode="decimal" style="border-color:var(--brand-red);">
+                </div>
+             </div>
         </div>
 
-        <button class="btn-main" id="btnCalculate">CALCULAR</button>
+        <div style="border-top: 1px dashed #e5e7eb; margin: 15px 0; padding-top:15px;">
+            <div class="results-grid">
+                <div class="form-group">
+                    <label id="lblBuy">Compra Unitario</label>
+                    <input type="number" id="purchasePrice" placeholder="0.00" inputmode="decimal">
+                </div>
+                <div class="form-group">
+                    <label id="lblSell">Venta Unitario</label>
+                    <input type="number" id="salePrice" placeholder="0.00" inputmode="decimal">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Margen Utilidad Deseado (%)</label>
+                <input type="number" id="profitMargin" placeholder="Opcional" inputmode="decimal">
+            </div>
+        </div>
+
+        <button class="btn-main" id="btnCalculate" onclick="calculate()">CALCULAR RENTABILIDAD</button>
     </div>
 
     <div id="resultsArea" class="hidden">
@@ -294,12 +261,23 @@
             <h2>Resultados Financieros</h2>
             <div class="results-grid" style="margin-bottom: 1rem;">
                 <div class="result-box">
-                    <span>Utilidad Bruta</span>
-                    <strong id="resGrossProfit">0</strong>
+                    <span>Utilidad Neta</span>
+                    <strong id="resProfit">0</strong>
                 </div>
                 <div class="result-box">
                     <span>ROI</span>
                     <strong id="resRoi">0%</strong>
+                </div>
+            </div>
+
+             <div class="results-grid" style="margin-bottom: 10px;">
+                <div class="result-box">
+                    <span>Ingreso Total</span>
+                    <strong id="resRevenue" class="text-success">0</strong>
+                </div>
+                <div class="result-box">
+                    <span>Costo Material</span>
+                    <strong id="resMatCost" class="text-danger">0</strong>
                 </div>
             </div>
             
@@ -315,7 +293,7 @@
             </div>
         </div>
 
-        <div class="card">
+        <div id="brokerResults" class="card hidden">
             <h2>Logística & Costos</h2>
             
             <div class="row-item highlight">
@@ -332,61 +310,86 @@
             </div>
 
             <button type="button" class="details-toggle" onclick="document.getElementById('detailsList').classList.toggle('hidden')">
-                Ver/Ocultar Desglose &#9662;
+                Ver/Ocultar Desglose Detallado &#9662;
             </button>
 
             <div id="detailsList" class="hidden" style="margin-top:10px; border-top:1px solid #eee; padding-top:10px;">
-                </div>
+            </div>
 
             <div class="checkbox-wrapper">
                 <input type="checkbox" id="pickupOverride">
                 <label for="pickupOverride">Recogida Proveedor (+$500/cont)</label>
             </div>
-            
-            <div class="form-group" style="margin-top:10px;">
-                <label style="font-size:0.8rem; color:var(--brand-red)">Ajuste Manual Costo Total:</label>
-                <input type="number" id="manualCost" placeholder="Escriba para sobreescribir cálculo" inputmode="decimal">
-                <small id="manualWarning" class="hidden" style="color:var(--brand-red); font-size:0.75rem; font-weight:bold;">*Sobreescribe desglose y recogida</small>
+             <div class="form-group" style="margin-top:10px;">
+                <label style="font-size:0.8rem; color:var(--brand-red)">Ajuste Manual Logística Total:</label>
+                <input type="number" id="manualCost" placeholder="Sobreescribir costo logístico" inputmode="decimal">
+            </div>
+        </div>
+
+        <div id="tradeResults" class="card hidden">
+            <h2>Resumen Logístico</h2>
+            <div class="row-item highlight">
+                <span>Gasto Logístico Fijo:</span>
+                <span id="resTradeLogistic">0 USD</span>
+            </div>
+            <div class="row-item">
+                <span>Peso Total:</span>
+                <strong id="resTradeWeight">0 LBS</strong>
+            </div>
+             <div class="row-item">
+                <span>Costo Logístico / Lb:</span>
+                <span id="resTradeUnit">0 USD/lb</span>
             </div>
         </div>
     </div>
 </div>
 
-<script id="csv-data" type="text/plain">
+<script id="broker-data" type="text/plain">
 MATERIAL;FLETE MARITIMO;SALIDA;BOLIPUERTO;INTER SHIP;COMISION;ORIGEN Y PUERTO;PAIS Y PUERTO DESTINO;ACARREO;KCI;ARANCEL;FLETE MIAMI
-HIERRO;540;1.000;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-ACERO;100;0;0;60;0;PUERTO RICO, PUERTO DE SAN JUAN;Kaohsiung, Taiwan;;;;
-ACR;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Loxley, Estados Unidos;0;0;0;950
-RIELES;1.815;1.580;500;55;50;VENEZUELA, LA GUAIRA;Qasim, Pakistan;;;;
-ALUMINIO DURO;920;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ennore, India;;;;
-ALUMINIO DURO;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
-ALUMINIO DURO;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;;;;
-COBRE;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;East Hartford, Estados Unidos;0;0;0;644
-ALUMINIO T/T;1.177;1.750;500;55;50;VENEZUELA, LA GUAIRA;Estambul, Turquia;;;;
-ALUMINIO T/T;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
-EC WIRE;1.000;0;0;950;0;COLOMBIA, BARRANQUILLA;Everglades, Estados Unidos;550;400;3.800,00;1.700,00
-EXTRUSION 6063;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Pennsylvania, Estados Unidos;0;0;0;1700
-ALUMINIO T/T;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Nhava Sheva, India;;;;
-PAILAS DE ALUMINIO;1.459;1.750;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;;;;
-PAILAS DE ALUMINIO;1.177;1.750;500;55;50;VENEZUELA, LA GUAIRA;Estambul, Turquia;;;;
-PAILAS DE ALUMINIO;240;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
-PAILAS DE ALUMINIO;60;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ningbo, China;;;;
-PERFIL ALUM;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.200,00;1.700,00
-RIN DE ALUMINIO;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.100,00;1.100,00
-HVAC;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Frisco City, Estados Unidos;;;;
-UBC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.100,00;1.100,00
-UBC;170;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
-FOIL;1.836;1.900;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;;;;
-ACERO;80;2.050;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;;;;
-ACR;170;3.550;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;;;;
-COBRE;1.282;11.500;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;450;1.600,00;1.950,00
-SEAL UNITS;0;0;0;0;0;ESTADOS UNIDOS, MIAMI;Frisco City, Estados Unidos;550;;;
-COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;;;;
+HIERRO;540;1.000;500;11;50;VENEZUELA, LA GUAIRA;Mundra, India;0;0;0;0
+HIERRO;755;1.000;500;11;50;VENEZUELA, LA GUAIRA;Nhava Sheva, India;0;0;0;0
+RIELES;1.815;1.580;500;5,50;50;VENEZUELA, LA GUAIRA;Qasim, Pakistan;0;0;0;0
+ALUMINIO DURO;920;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ennore, India;0;0;0;0
+ALUMINIO DURO;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;0;0;0;0
+ALUMINIO DURO;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;0;0;0;0
+ALUMINIO T/T;1.177;1.750;500;55;50;VENEZUELA, LA GUAIRA;Estambul, Turquia;0;0;0;0
+ALUMINIO T/T;80;1.750;500;55;50;VENEZUELA, LA GUAIRA;Kaohsiung, Taiwan;0;0;0;0
+ALUMINIO T/T;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Mundra, India;0;0;0;0
+ALUMINIO T/T;720;1.750;500;55;50;VENEZUELA, LA GUAIRA;Nhava Sheva, India;0;0;0;0
+PAILAS DE ALUMINIO;1.459;1.750;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;0;0;0;0
+PAILAS DE ALUMINIO;1.177;1.750;500;55;50;VENEZUELA, LA GUAIRA;Estambul, Turquia;0;0;0;0
+PAILAS DE ALUMINIO;240;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;0;0;0;0
+PAILAS DE ALUMINIO;60;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ningbo, China;0;0;0;0
+PERFIL VIRGEN;2.252;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.900;1.300
+PERFIL VIRGEN;1.892;1.750;500;55;50;VENEZUELA, LA GUAIRA;Los Angeles, Estados Unidos;0;400;1.812;500
+RIN DE ALUMINIO;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.100;1.100
+RIN DE ALUMINIO;1.540;1.750;500;55;50;VENEZUELA, LA GUAIRA;Altamira, Mexico;0;0;0;0
+UBC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.100;1.100
+UBC;170;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;0;0;0;0
+FOIL;1.836;1.900;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;0;0;0;0
+EC WIRE;1.000;0;0;950;0;COLOMBIA, BARRANQUILLA;Everglades, Estados Unidos;550;400;2.000;1.700
+ACERO;100;0;0;60;0;PUERTO RICO;Kaohsiung, Taiwan;0;0;0;0
+COBRE;1.282;11.500;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;450;1.600;1.950
+COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;0;0;0;0
 </script>
 
 <script>
-    let db = [];
     const LBS_TO_TM = 2204.62;
+    let currentMode = 'broker';
+    let dbBroker = [];
+    
+    // LISTA MANUAL DE MATERIALES TRADE
+    const tradeMaterials = [
+        "6063",
+        "ACR",
+        "ALUM RADS",
+        "COBRE",
+        "EC WIRE",
+        "EXTRUSION 95/5",
+        "HVAC",
+        "RINES ALUM",
+        "SEAL UNITS"
+    ];
 
     function parseCSV(text) {
         const lines = text.trim().split('\n');
@@ -419,156 +422,230 @@ COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;;;;
         }).format(num);
     }
 
-    const dom = {
-        mat: document.getElementById('material'),
-        dest: document.getElementById('destino'),
-        qty: document.getElementById('quantity'),
-        unit: document.getElementById('unit'),
-        buy: document.getElementById('purchasePrice'),
-        sell: document.getElementById('salePrice'),
-        margin: document.getElementById('profitMargin'),
-        manual: document.getElementById('manualCost'),
-        pickup: document.getElementById('pickupOverride'),
-        btn: document.getElementById('btnCalculate'),
-        results: document.getElementById('resultsArea'),
-        details: document.getElementById('detailsList'),
-        suggestions: document.getElementById('suggestionsContainer'),
-        manualWarning: document.getElementById('manualWarning')
-    };
-
+    // --- CARGA DE DATOS ---
     function init() {
-        const rawData = document.getElementById('csv-data').textContent;
-        const rows = parseCSV(rawData);
+        const brokerRaw = document.getElementById('broker-data').textContent;
+        const bRows = parseCSV(brokerRaw);
         const unique = new Set();
-        db = rows.filter(row => {
+        dbBroker = bRows.filter(row => {
             const key = row['MATERIAL'] + '|' + row['PAIS Y PUERTO DESTINO'];
             const isDup = unique.has(key);
             unique.add(key);
             return !isDup;
         });
 
-        const mats = [...new Set(db.map(x => x['MATERIAL']))].sort();
-        dom.mat.innerHTML = '<option value="">-- Seleccione Material --</option>';
-        mats.forEach(m => dom.mat.add(new Option(m, m)));
+        updateMaterialSelect();
+        
+        // AGREGAR EVENT LISTENERS AUTOMÁTICOS
+        const autoInputs = ['quantity', 'purchasePrice', 'salePrice', 'profitMargin', 'manualCost', 't_weight', 't_logistic'];
+        autoInputs.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) {
+                el.addEventListener('input', () => {
+                    // Si ya se ha calculado antes (resultado visible), actualizar en tiempo real
+                    if(!document.getElementById('resultsArea').classList.contains('hidden')) {
+                        calculate();
+                    }
+                });
+                // Soporte explícito para ENTER
+                el.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') calculate();
+                });
+            }
+        });
+
+        // Listeners específicos
+        document.getElementById('pickupOverride').addEventListener('change', () => {
+             if(!document.getElementById('resultsArea').classList.contains('hidden')) calculate();
+        });
+        
+        document.getElementById('material').addEventListener('change', (e) => {
+            const val = e.target.value;
+            if(currentMode === 'broker') {
+                const destSel = document.getElementById('destino');
+                destSel.innerHTML = '<option value="">-- Seleccione Destino --</option>';
+                destSel.disabled = false;
+                if(val) {
+                    const dests = dbBroker.filter(r => r['MATERIAL'] === val).map(r => r['PAIS Y PUERTO DESTINO']).sort();
+                    dests.forEach(d => destSel.add(new Option(d, d)));
+                }
+            }
+            document.getElementById('resultsArea').classList.add('hidden');
+        });
+        
+        document.getElementById('destino').addEventListener('change', () => {
+             document.getElementById('resultsArea').classList.add('hidden');
+        });
     }
 
-    dom.mat.addEventListener('change', () => {
-        const val = dom.mat.value;
-        dom.dest.innerHTML = '<option value="">-- Seleccione Destino --</option>';
-        dom.dest.disabled = !val;
-        if(val) {
-            const dests = db.filter(r => r['MATERIAL'] === val).map(r => r['PAIS Y PUERTO DESTINO']).sort();
-            dests.forEach(d => dom.dest.add(new Option(d, d)));
+    function setMode(mode) {
+        currentMode = mode;
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(t => t.classList.remove('active'));
+        
+        const modeLabel = document.getElementById('modeLabel');
+        const brokerFields = document.getElementById('brokerFields');
+        const tradeFields = document.getElementById('tradeFields');
+        
+        if(mode === 'broker') {
+            tabs[0].classList.add('active');
+            modeLabel.textContent = 'Broker';
+            modeLabel.className = 'mode-badge badge-broker';
+            brokerFields.classList.remove('hidden');
+            tradeFields.classList.add('hidden');
+            document.getElementById('lblBuy').textContent = 'Compra (USD/TM)';
+            document.getElementById('lblSell').textContent = 'Venta (USD/TM)';
+        } else {
+            tabs[1].classList.add('active');
+            modeLabel.textContent = 'Trade';
+            modeLabel.className = 'mode-badge badge-trade';
+            brokerFields.classList.add('hidden');
+            tradeFields.classList.remove('hidden');
+            document.getElementById('lblBuy').textContent = 'Compra (USD/LB)';
+            document.getElementById('lblSell').textContent = 'Venta (USD/LB)';
         }
-        dom.results.classList.add('hidden');
-    });
+        
+        updateMaterialSelect();
+        document.getElementById('resultsArea').classList.add('hidden');
+    }
 
-    dom.unit.addEventListener('change', () => {
-        const u = dom.unit.value;
-        document.getElementById('lblBuy').textContent = `Compra (USD/${u})`;
-        document.getElementById('lblSell').textContent = `Venta (USD/${u})`;
-        document.getElementById('lblLogisticUnit').textContent = `Costo por ${u}:`;
+    function updateMaterialSelect() {
+        const sel = document.getElementById('material');
+        sel.innerHTML = '<option value="">-- Seleccione Material --</option>';
+        
+        if(currentMode === 'broker') {
+            const mats = [...new Set(dbBroker.map(x => x['MATERIAL']))].sort();
+            mats.forEach(m => sel.add(new Option(m, m)));
+        } else {
+            tradeMaterials.sort().forEach(m => sel.add(new Option(m, m)));
+        }
+
+        document.getElementById('destino').innerHTML = '<option value="">-- Seleccione material primero --</option>';
+        document.getElementById('destino').disabled = true;
+        document.getElementById('t_weight').value = '';
+        document.getElementById('t_logistic').value = '';
+    }
+
+    document.getElementById('unit').addEventListener('change', () => {
+        const u = document.getElementById('unit').value;
+        if(currentMode === 'broker') {
+            document.getElementById('lblBuy').textContent = `Compra (USD/${u})`;
+            document.getElementById('lblSell').textContent = `Venta (USD/${u})`;
+        }
     });
 
     function calculate() {
-        if(!dom.mat.value || !dom.dest.value) {
-            if(dom.results.classList.contains('hidden')) alert('Seleccione Material y Destino');
-            return;
-        }
-        
-        const q = parseFloat(dom.qty.value) || 0;
-        if(q <= 0) { 
-             if(dom.results.classList.contains('hidden')) alert('Ingrese cantidad válida'); 
+        const mat = document.getElementById('material').value;
+        if(!mat) { 
+             // Si el cálculo fue disparado por evento automático pero no hay datos, no hacer nada
              return; 
         }
 
-        const row = db.find(r => r['MATERIAL'] === dom.mat.value && r['PAIS Y PUERTO DESTINO'] === dom.dest.value);
-        if(!row) return;
+        let totalLog = 0;
+        let quantityUnit = 0; 
+        let totalRevenue = 0;
+        let totalMatCost = 0;
 
-        const isLbs = dom.unit.value === 'LBS';
-        const tons = isLbs ? q / LBS_TO_TM : q;
-        const containers = Math.ceil(tons / 27.5);
+        if (currentMode === 'broker') {
+            const dest = document.getElementById('destino').value;
+            const qInput = parseFloat(document.getElementById('quantity').value) || 0;
+            const unit = document.getElementById('unit').value;
 
-        // Costos
-        const c = {
-            ocean: cleanNum(row['FLETE MARITIMO']),
-            salida: cleanNum(row['SALIDA']),
-            bolipuerto: cleanNum(row['BOLIPUERTO']),
-            inter: cleanNum(row['INTER SHIP']),
-            com: cleanNum(row['COMISION']),
-            acarreo: cleanNum(row['ACARREO']),
-            kci: cleanNum(row['KCI']),
-            arancel: cleanNum(row['ARANCEL']),
-            miami: cleanNum(row['FLETE MIAMI']),
-            pickup: dom.pickup.checked ? 500 : 0
-        };
+            if(!dest || qInput <= 0) return;
 
-        const costPerCont = c.ocean + c.salida + c.bolipuerto + c.inter + c.com + c.acarreo + c.kci + c.arancel + c.miami + c.pickup;
-        let totalLog = costPerCont * containers;
+            const row = dbBroker.find(r => r['MATERIAL'] === mat && r['PAIS Y PUERTO DESTINO'] === dest);
+            
+            const tons = unit === 'LBS' ? qInput / LBS_TO_TM : qInput;
+            const containers = Math.ceil(tons / 27.5);
 
-        // Manual Override
-        const manual = parseFloat(dom.manual.value);
-        const hasManual = !isNaN(manual) && manual > 0;
-        
-        if(hasManual) {
-            totalLog = manual;
-            dom.manualWarning.classList.remove('hidden');
+            const c = {
+                ocean: cleanNum(row['FLETE MARITIMO']),
+                salida: cleanNum(row['SALIDA']),
+                bolipuerto: cleanNum(row['BOLIPUERTO']),
+                inter: cleanNum(row['INTER SHIP']),
+                com: cleanNum(row['COMISION']),
+                acarreo: cleanNum(row['ACARREO']),
+                kci: cleanNum(row['KCI']),
+                arancel: cleanNum(row['ARANCEL']),
+                miami: cleanNum(row['FLETE MIAMI']),
+                pickup: document.getElementById('pickupOverride').checked ? 500 : 0
+            };
+
+            const costPerCont = Object.values(c).reduce((a,b)=>a+b, 0);
+            
+            const manual = parseFloat(document.getElementById('manualCost').value);
+            totalLog = (manual > 0) ? manual : costPerCont * containers;
+
+            document.getElementById('resTotalLogistic').textContent = fmt(totalLog);
+            document.getElementById('resLogisticUnit').textContent = fmt(totalLog / qInput); 
+            document.getElementById('resContainers').textContent = containers;
+            renderDetailsBroker(c, costPerCont);
+            
+            document.getElementById('brokerResults').classList.remove('hidden');
+            document.getElementById('tradeResults').classList.add('hidden');
+
+            quantityUnit = qInput;
+
         } else {
-            dom.manualWarning.classList.add('hidden');
+            const weight = parseFloat(document.getElementById('t_weight').value) || 0;
+            const logCost = parseFloat(document.getElementById('t_logistic').value) || 0;
+
+            if(weight <= 0) return;
+            
+            totalLog = logCost;
+            quantityUnit = weight; 
+
+            document.getElementById('resTradeLogistic').textContent = fmt(totalLog);
+            document.getElementById('resTradeWeight').textContent = weight.toLocaleString() + ' LBS';
+            document.getElementById('resTradeUnit').textContent = fmt(totalLog/weight) + ' /lb';
+            
+            document.getElementById('brokerResults').classList.add('hidden');
+            document.getElementById('tradeResults').classList.remove('hidden');
         }
 
-        const logUnit = totalLog / q;
+        const pBuy = parseFloat(document.getElementById('purchasePrice').value) || 0;
+        const pSell = parseFloat(document.getElementById('salePrice').value) || 0;
+        const margin = parseFloat(document.getElementById('profitMargin').value) || 0;
 
-        const pBuy = parseFloat(dom.buy.value) || 0;
-        const pSell = parseFloat(dom.sell.value) || 0;
-        const totalBuy = q * pBuy;
-        const totalSell = q * pSell;
-        const totalCost = totalBuy + totalLog;
-        const gross = totalSell - totalCost;
-        const roi = totalCost > 0 ? (gross / totalCost) * 100 : 0;
+        totalRevenue = quantityUnit * pSell;
+        totalMatCost = quantityUnit * pBuy;
+        const totalCostAll = totalMatCost + totalLog;
+        const profit = totalRevenue - totalCostAll;
+        const roi = totalCostAll > 0 ? (profit / totalCostAll) * 100 : 0;
 
-        // Sugerencias
-        const margin = parseFloat(dom.margin.value) || 0;
-        if (margin > 0) {
-            dom.suggestions.classList.remove('hidden');
-            const unitCostTotal = pBuy + logUnit;
-            const idealSell = margin < 100 ? unitCostTotal / (1 - (margin/100)) : 0;
-            const idealBuy = pSell - logUnit - (pSell * (margin/100));
+        if(margin > 0) {
+            document.getElementById('suggestionsContainer').classList.remove('hidden');
+            const logisticPerUnit = totalLog / quantityUnit;
+            const idealSell = (pBuy + logisticPerUnit) / (1 - (margin/100));
+            const idealBuy = pSell - logisticPerUnit - (pSell * (margin/100));
+            
             document.getElementById('resIdealSell').textContent = fmt(idealSell);
             document.getElementById('resIdealBuy').textContent = fmt(idealBuy);
         } else {
-            dom.suggestions.classList.add('hidden');
+            document.getElementById('suggestionsContainer').classList.add('hidden');
         }
 
-        // Render UI
-        document.getElementById('resTotalLogistic').textContent = fmt(totalLog);
-        document.getElementById('resLogisticUnit').textContent = fmt(logUnit);
-        document.getElementById('resContainers').textContent = containers;
+        document.getElementById('resProfit').textContent = fmt(profit);
+        document.getElementById('resProfit').className = profit >= 0 ? 'text-success' : 'text-danger';
         
-        document.getElementById('resGrossProfit').textContent = fmt(gross);
-        document.getElementById('resGrossProfit').className = gross >= 0 ? 'text-success' : 'text-danger';
-        
-        document.getElementById('resRoi').textContent = roi.toFixed(1) + '%';
+        document.getElementById('resRoi').textContent = roi.toFixed(2) + '%';
         document.getElementById('resRoi').className = roi >= 0 ? 'text-success' : 'text-danger';
 
-        renderDetails(c, costPerCont);
-        dom.results.classList.remove('hidden');
-        
-        // Scroll a resultados si es móvil
-        if(window.innerWidth < 600) {
-            dom.results.scrollIntoView({behavior: 'smooth', block: 'start'});
-        }
+        document.getElementById('resRevenue').textContent = fmt(totalRevenue);
+        document.getElementById('resMatCost').textContent = fmt(totalMatCost);
+
+        document.getElementById('resultsArea').classList.remove('hidden');
     }
 
-    function renderDetails(c, total) {
+    function renderDetailsBroker(c, total) {
         let html = '';
         const add = (lbl, val) => {
             if(val > 0) html += `<div class="row-item"><span class="text-light">${lbl}</span><span>${fmt(val)}</span></div>`;
         };
         
-        const manual = parseFloat(dom.manual.value);
+        const manual = parseFloat(document.getElementById('manualCost').value);
         if(!isNaN(manual) && manual > 0) {
-            dom.details.innerHTML = '<div style="text-align:center; color:var(--brand-red); padding:10px; font-style:italic">Desglose desactivado por ajuste manual</div>';
+            document.getElementById('detailsList').innerHTML = '<div style="text-align:center; color:var(--brand-red); padding:10px; font-style:italic">Desglose desactivado por ajuste manual</div>';
             return;
         }
 
@@ -584,22 +661,8 @@ COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;;;;
         add('Recogida Proveedor', c.pickup);
         
         html += `<div class="row-item highlight" style="margin-top:5px"><span>TOTAL / CONTENEDOR</span><span>${fmt(total)}</span></div>`;
-        dom.details.innerHTML = html;
+        document.getElementById('detailsList').innerHTML = html;
     }
-
-    dom.btn.addEventListener('click', calculate);
-    
-    dom.pickup.addEventListener('change', () => {
-        if(!dom.results.classList.contains('hidden')) calculate();
-    });
-
-    dom.manual.addEventListener('input', () => {
-        if(!dom.results.classList.contains('hidden')) calculate();
-    });
-    
-    dom.margin.addEventListener('input', () => {
-         if(!dom.results.classList.contains('hidden')) calculate();
-    });
 
     init();
 </script>
