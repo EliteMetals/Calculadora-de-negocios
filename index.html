@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#111827">
-    <title>Elite Metals - Master Calculator v4 (Auto)</title>
+    <title>Elite Metals - Master Calculator v8 (Final)</title>
     <style>
         :root {
             --brand-red: #d32f2f;       
@@ -54,7 +54,7 @@
             display: flex;
             background: #e5e7eb;
             margin: 1rem auto 0;
-            max-width: 600px;
+            max-width: 650px;
             padding: 4px;
             border-radius: 10px;
             position: sticky;
@@ -83,7 +83,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .container { max-width: 600px; margin: 0 auto; padding: 1rem; }
+        .container { max-width: 650px; margin: 0 auto; padding: 1rem; }
 
         .card {
             background: var(--card-bg);
@@ -143,19 +143,75 @@
         }
         .btn-main:active { transform: scale(0.98); }
 
-        .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .result-box {
-            background: #f8fafc;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid var(--border);
+        /* --- CSS GRID DASHBOARD OPTIMIZADO (MÓVIL) --- */
+        .metrics-grid {
+            display: grid;
+            /* Móvil: 2 columnas para ver mejor los datos sin tanto scroll */
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+            margin-bottom: 20px;
         }
-        .result-box span { display: block; font-size: 0.75rem; color: var(--text-light); margin-bottom: 4px; text-transform: uppercase; }
-        .result-box strong { display: block; font-size: 1.3rem; color: var(--brand-black); }
+        
+        /* Ajuste de seguridad para pantallas muy angostas */
+        @media (max-width: 360px) {
+            .metrics-grid { grid-template-columns: 1fr; }
+        }
+
+        /* PC / Tablet: 3 columnas */
+        @media (min-width: 600px) {
+            .metrics-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            }
+        }
+
+        .metric-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 12px 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+            min-height: 90px;
+        }
+        
+        .metric-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+
+        /* Decoración superior */
+        .border-top-success { border-top: 4px solid var(--success); }
+        .border-top-danger { border-top: 4px solid var(--brand-red); }
+        .border-top-blue { border-top: 4px solid #3b82f6; }
+
+        .metric-label {
+            font-size: 0.65rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--brand-black);
+            line-height: 1.1;
+        }
+        
+        /* Ajuste de tamaño de fuente para móviles */
+        @media (max-width: 400px) {
+            .metric-value { font-size: 1.1rem; }
+        }
         
         .text-success { color: var(--success) !important; }
         .text-danger { color: var(--brand-red) !important; }
+        .text-blue { color: #2563eb !important; }
+
         .hidden { display: none !important; }
         
         .row-item { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 10px; border-bottom: 1px dashed #e5e7eb; padding-bottom: 5px; }
@@ -223,7 +279,7 @@
         </div>
 
         <div id="tradeFields" class="hidden">
-             <div class="results-grid">
+             <div class="results-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                 <div class="form-group">
                     <label>Peso Carga (LBS)</label>
                     <input type="number" id="t_weight" placeholder="0" inputmode="decimal">
@@ -236,7 +292,7 @@
         </div>
 
         <div style="border-top: 1px dashed #e5e7eb; margin: 15px 0; padding-top:15px;">
-            <div class="results-grid">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                 <div class="form-group">
                     <label id="lblBuy">Compra Unitario</label>
                     <input type="number" id="purchasePrice" placeholder="0.00" inputmode="decimal">
@@ -259,28 +315,40 @@
         
         <div class="card">
             <h2>Resultados Financieros</h2>
-            <div class="results-grid" style="margin-bottom: 1rem;">
-                <div class="result-box">
-                    <span>Utilidad Neta</span>
-                    <strong id="resProfit">0</strong>
-                </div>
-                <div class="result-box">
-                    <span>ROI</span>
-                    <strong id="resRoi">0%</strong>
-                </div>
-            </div>
-
-             <div class="results-grid" style="margin-bottom: 10px;">
-                <div class="result-box">
-                    <span>Ingreso Total</span>
-                    <strong id="resRevenue" class="text-success">0</strong>
-                </div>
-                <div class="result-box">
-                    <span>Costo Material</span>
-                    <strong id="resMatCost" class="text-danger">0</strong>
-                </div>
-            </div>
             
+            <div class="metrics-grid">
+                
+                <div class="metric-card border-top-success">
+                    <div class="metric-label">Utilidad Neta</div>
+                    <div class="metric-value text-success" id="resProfit">0</div>
+                </div>
+
+                <div class="metric-card border-top-blue">
+                    <div class="metric-label">ROI</div>
+                    <div class="metric-value text-blue" id="resRoi">0%</div>
+                </div>
+
+                <div class="metric-card border-top-success">
+                    <div class="metric-label">Utilidad por Ton</div>
+                    <div class="metric-value text-success" id="resProfitPerTon">0</div>
+                </div>
+
+                <div class="metric-card border-top-success">
+                    <div class="metric-label">Ingreso Total</div>
+                    <div class="metric-value" id="resRevenue">0</div>
+                </div>
+
+                <div class="metric-card border-top-danger">
+                    <div class="metric-label">Costo Inversión (Total)</div>
+                    <div class="metric-value text-danger" id="resInvestment">0</div>
+                </div>
+
+                <div class="metric-card border-top-danger">
+                    <div class="metric-label">Costo Material</div>
+                    <div class="metric-value" style="color:#4b5563;" id="resMatCost">0</div>
+                </div>
+
+            </div>
             <div id="suggestionsContainer" class="hidden">
                 <div class="row-item">
                     <span>Precio Venta Sugerido:</span>
@@ -294,14 +362,14 @@
         </div>
 
         <div id="brokerResults" class="card hidden">
-            <h2>Logística & Costos</h2>
+            <h2>Logística y Gastos</h2>
             
             <div class="row-item highlight">
                 <span>Total Logística:</span>
                 <span id="resTotalLogistic">0 USD</span>
             </div>
             <div class="row-item">
-                <span id="lblLogisticUnit">Costo por TM:</span>
+                <span id="lblLogisticUnit">Gasto por TM:</span>
                 <strong id="resLogisticUnit">0 USD</strong>
             </div>
             <div class="row-item">
@@ -345,7 +413,7 @@
 </div>
 
 <script id="broker-data" type="text/plain">
-MATERIAL;FLETE MARITIMO;SALIDA;BOLIPUERTO;INTER SHIP;COMISION;ORIGEN Y PUERTO;PAIS Y PUERTO DESTINO;ACARREO;KCI;ARANCEL;FLETE MIAMI
+MATERIAL;FLETE MARITIMO;SALIDA;BOLIPUERTO;INTER SHIP;COMISION;ORIGEN Y PUERTO;PAIS Y PUERTO DESTINO;ACARREO;KCI;ARANCEL;FLETE MIAMI;TRASEGADO
 HIERRO;540;1.000;500;11;50;VENEZUELA, LA GUAIRA;Mundra, India;0;0;0;0
 HIERRO;755;1.000;500;11;50;VENEZUELA, LA GUAIRA;Nhava Sheva, India;0;0;0;0
 RIELES;1.815;1.580;500;5,50;50;VENEZUELA, LA GUAIRA;Qasim, Pakistan;0;0;0;0
@@ -360,16 +428,16 @@ PAILAS DE ALUMINIO;1.459;1.750;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;0;
 PAILAS DE ALUMINIO;1.177;1.750;500;55;50;VENEZUELA, LA GUAIRA;Estambul, Turquia;0;0;0;0
 PAILAS DE ALUMINIO;240;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;0;0;0;0
 PAILAS DE ALUMINIO;60;1.750;500;55;50;VENEZUELA, LA GUAIRA;Ningbo, China;0;0;0;0
-PERFIL VIRGEN;2.252;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.900;1.300
-PERFIL VIRGEN;1.892;1.750;500;55;50;VENEZUELA, LA GUAIRA;Los Angeles, Estados Unidos;0;400;1.812;500
-RIN DE ALUMINIO;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.100;1.100
+PERFIL VIRGEN;2.252;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;700;400;1.900;1.300;500
+PERFIL VIRGEN;1.892;1.750;500;55;50;VENEZUELA, LA GUAIRA;Los Angeles, Estados Unidos;700;400;1.812;1.300;500
+RIN DE ALUMINIO;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;700;400;1.100;1.300;500
 RIN DE ALUMINIO;1.540;1.750;500;55;50;VENEZUELA, LA GUAIRA;Altamira, Mexico;0;0;0;0
-UBC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;400;1.100;1.100
+UBC;1.282;1.750;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;700;400;1.100;1.300;500
 UBC;170;1.750;500;55;50;VENEZUELA, LA GUAIRA;Laem Chabang, Tailandia;0;0;0;0
 FOIL;1.836;1.900;500;55;50;VENEZUELA, LA GUAIRA;Bilbao, España;0;0;0;0
-EC WIRE;1.000;0;0;950;0;COLOMBIA, BARRANQUILLA;Everglades, Estados Unidos;550;400;2.000;1.700
+EC WIRE;1.000;0;0;950;0;COLOMBIA, BARRANQUILLA;Everglades, Estados Unidos;700;400;2.000;1.700;500
 ACERO;100;0;0;60;0;PUERTO RICO;Kaohsiung, Taiwan;0;0;0;0
-COBRE;1.282;11.500;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;550;450;1.600;1.950
+COBRE;1.282;11.500;500;55;50;VENEZUELA, LA GUAIRA;Everglades, Estados Unidos;700;450;1.600;1.950;500
 COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;0;0;0;0
 </script>
 
@@ -415,10 +483,12 @@ COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;0;0;0;0
     }
 
     function fmt(num, isMoney=true) {
+        // AQUÍ ESTÁ EL CAMBIO: maximumFractionDigits: 0 PARA QUITAR DECIMALES
         return new Intl.NumberFormat('en-US', { 
             style: isMoney ? 'currency' : 'decimal', 
             currency: 'USD',
-            maximumFractionDigits: 2 
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0 
         }).format(num);
     }
 
@@ -442,19 +512,16 @@ COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;0;0;0;0
             const el = document.getElementById(id);
             if(el) {
                 el.addEventListener('input', () => {
-                    // Si ya se ha calculado antes (resultado visible), actualizar en tiempo real
                     if(!document.getElementById('resultsArea').classList.contains('hidden')) {
                         calculate();
                     }
                 });
-                // Soporte explícito para ENTER
                 el.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter') calculate();
                 });
             }
         });
 
-        // Listeners específicos
         document.getElementById('pickupOverride').addEventListener('change', () => {
              if(!document.getElementById('resultsArea').classList.contains('hidden')) calculate();
         });
@@ -536,15 +603,13 @@ COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;0;0;0;0
 
     function calculate() {
         const mat = document.getElementById('material').value;
-        if(!mat) { 
-             // Si el cálculo fue disparado por evento automático pero no hay datos, no hacer nada
-             return; 
-        }
+        if(!mat) return; 
 
         let totalLog = 0;
         let quantityUnit = 0; 
         let totalRevenue = 0;
         let totalMatCost = 0;
+        let quantityInTons = 0; 
 
         if (currentMode === 'broker') {
             const dest = document.getElementById('destino').value;
@@ -555,8 +620,9 @@ COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;0;0;0;0
 
             const row = dbBroker.find(r => r['MATERIAL'] === mat && r['PAIS Y PUERTO DESTINO'] === dest);
             
-            const tons = unit === 'LBS' ? qInput / LBS_TO_TM : qInput;
-            const containers = Math.ceil(tons / 27.5);
+            // Calcular toneladas para el desglose
+            quantityInTons = unit === 'LBS' ? qInput / LBS_TO_TM : qInput;
+            const containers = Math.ceil(quantityInTons / 27.5);
 
             const c = {
                 ocean: cleanNum(row['FLETE MARITIMO']),
@@ -568,6 +634,7 @@ COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;0;0;0;0
                 kci: cleanNum(row['KCI']),
                 arancel: cleanNum(row['ARANCEL']),
                 miami: cleanNum(row['FLETE MIAMI']),
+                trasegado: cleanNum(row['TRASEGADO']), 
                 pickup: document.getElementById('pickupOverride').checked ? 500 : 0
             };
 
@@ -593,7 +660,8 @@ COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;0;0;0;0
             if(weight <= 0) return;
             
             totalLog = logCost;
-            quantityUnit = weight; 
+            quantityUnit = weight;
+            quantityInTons = weight / LBS_TO_TM; 
 
             document.getElementById('resTradeLogistic').textContent = fmt(totalLog);
             document.getElementById('resTradeWeight').textContent = weight.toLocaleString() + ' LBS';
@@ -609,10 +677,38 @@ COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;0;0;0;0
 
         totalRevenue = quantityUnit * pSell;
         totalMatCost = quantityUnit * pBuy;
-        const totalCostAll = totalMatCost + totalLog;
-        const profit = totalRevenue - totalCostAll;
-        const roi = totalCostAll > 0 ? (profit / totalCostAll) * 100 : 0;
+        
+        // --- CÁLCULOS FINANCIEROS CLAVE ---
+        const totalInvestment = totalMatCost + totalLog; 
+        const profit = totalRevenue - totalInvestment;
+        const profitPerTon = quantityInTons > 0 ? profit / quantityInTons : 0; 
+        const roi = totalInvestment > 0 ? (profit / totalInvestment) * 100 : 0;
 
+        // --- ACTUALIZAR DASHBOARD COMPARTIDO (BROKER Y TRADE) ---
+        
+        // 1. Utilidad Neta
+        document.getElementById('resProfit').textContent = fmt(profit);
+        document.getElementById('resProfit').className = 'metric-value ' + (profit >= 0 ? 'text-success' : 'text-danger');
+
+        // 2. ROI (Mantiene decimales)
+        document.getElementById('resRoi').textContent = roi.toFixed(2) + '%';
+        document.getElementById('resRoi').className = 'metric-value ' + (roi >= 0 ? 'text-blue' : 'text-danger');
+
+        // 3. Utilidad por Tonelada
+        document.getElementById('resProfitPerTon').textContent = fmt(profitPerTon);
+        document.getElementById('resProfitPerTon').className = 'metric-value ' + (profitPerTon >= 0 ? 'text-success' : 'text-danger');
+
+        // 4. Ingreso Total
+        document.getElementById('resRevenue').textContent = fmt(totalRevenue);
+
+        // 5. Costo Inversión
+        document.getElementById('resInvestment').textContent = fmt(totalInvestment);
+
+        // 6. Costo Material
+        document.getElementById('resMatCost').textContent = fmt(totalMatCost);
+
+
+        // Actualizar Sugerencias
         if(margin > 0) {
             document.getElementById('suggestionsContainer').classList.remove('hidden');
             const logisticPerUnit = totalLog / quantityUnit;
@@ -624,15 +720,6 @@ COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;0;0;0;0
         } else {
             document.getElementById('suggestionsContainer').classList.add('hidden');
         }
-
-        document.getElementById('resProfit').textContent = fmt(profit);
-        document.getElementById('resProfit').className = profit >= 0 ? 'text-success' : 'text-danger';
-        
-        document.getElementById('resRoi').textContent = roi.toFixed(2) + '%';
-        document.getElementById('resRoi').className = roi >= 0 ? 'text-success' : 'text-danger';
-
-        document.getElementById('resRevenue').textContent = fmt(totalRevenue);
-        document.getElementById('resMatCost').textContent = fmt(totalMatCost);
 
         document.getElementById('resultsArea').classList.remove('hidden');
     }
@@ -658,6 +745,7 @@ COBRE;60;11.500;500;55;50;VENEZUELA, LA GUAIRA;Gaoming, China;0;0;0;0
         add('KCI (USA)', c.kci);
         add('Arancel (USA)', c.arancel);
         add('Flete Miami', c.miami);
+        add('Trasegado', c.trasegado); 
         add('Recogida Proveedor', c.pickup);
         
         html += `<div class="row-item highlight" style="margin-top:5px"><span>TOTAL / CONTENEDOR</span><span>${fmt(total)}</span></div>`;
